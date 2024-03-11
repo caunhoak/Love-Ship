@@ -7,4 +7,9 @@ const authController = require('../controllers/authController');
 router.post('/login', authController.login);
 router.post('/register', authController.register);
 
+// Route lấy danh sách tất cả người dùng
+router.get('/user', authController.getAllUsers);
+// Route cập nhật thông tin người dùng
+router.put('/user/:userId', authController.updateUser);
+
 module.exports = router;
