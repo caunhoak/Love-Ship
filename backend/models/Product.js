@@ -2,11 +2,10 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: String,
     description: String,
-    price: { type: Number, required: true },
+    price: Number,
     image: String,
-    quantity: { type: Number, default: 0 }, // Thêm trường số lượng sản phẩm
     store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' }
 });
 
