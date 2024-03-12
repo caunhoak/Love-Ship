@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -6,6 +5,9 @@ import StartScreen from './screens/StartScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import AdminScreen from './screens/AdminScreen';
+import StoreScreen from './screens/StoreScreen';
+import CustomerScreen from './screens/CustomerScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,9 @@ const App = () => {
           component={ForgotPasswordScreen}
           options={{ title: 'Quên mật khẩu' }}
         />
+        <Stack.Screen name="AdminScreen" component={AdminScreen} options={{ title: 'Admin' }} />
+        <Stack.Screen name="StoreScreen" component={StoreScreen} options={{ title: 'Quản lý cửa hàng' }} />
+        <Stack.Screen name="CustomerScreen" component={CustomerScreen} options={{ title: 'Khách hàng' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
