@@ -1,4 +1,1 @@
 # Love-Ship
-
-# Frontend:
-
