@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
   return (
     <Provider>
       <View style={styles.container}>
-        <WingBlank>
+        <WingBlank style={styles.wingBlank}>
           <Text style={styles.title}>Đăng nhập</Text>
           <View style={styles.viewInputContainer}>
             <View style={styles.viewInput}>
