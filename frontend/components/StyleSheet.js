@@ -3,8 +3,10 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: "55%",
     backgroundColor: "#808080",
+  },
+  wingBlank: {
+    paddingTop: "50%",
   },
   logoContainer: {
     position: "absolute",
@@ -45,6 +47,8 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 30,
+    width: "50%",
+    marginLeft: "25%",
   },
 });
 

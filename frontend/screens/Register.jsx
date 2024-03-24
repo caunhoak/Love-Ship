@@ -33,7 +33,7 @@ const Register = ({ navigation }) => {
   return (
     <Provider>
       <View style={styles.container}>
-        <WingBlank>
+        <WingBlank style={styles.wingBlank}>
           <Text style={styles.title}>Đăng ký</Text>
           <View style={styles.viewInputContainer}>
             <View style={styles.viewInput}>
