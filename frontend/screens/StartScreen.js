@@ -1,43 +1,58 @@
-// StartScreen.js
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
+import { View, Image} from 'react-native';
+import styles from '../components/StyleSheet';
+import Login from './Login';
+import Register from './Register';
+import RePassword from './RePassword';
 
-const StartScreen = ({ navigation }) => {
-  const handleSignUp = () => {
-    // Chuyển đến màn hình đăng ký
-    navigation.navigate('SignUp');
-  };
+const Tab = createBottomTabNavigator();
 
-  const handleLogin = () => {
-    // Chuyển đến màn hình đăng nhập
-    navigation.navigate('Login');
-  };
-
+const StartScreen = () => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Đăng ký</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleLogin}>
-        <Text style={styles.buttonText}>Đăng nhập</Text>
-      </TouchableOpacity>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
+
+            if (route.name === 'Đăng nhập') {
+              iconName = 'log-in';
+            } else if (route.name === 'Đăng ký') {
+              iconName = 'person-add';
+            } else if (route.name === 'Lấy lại mật khẩu') {
+              iconName = 'lock-closed';
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarInactiveTintColor="gray"
+        tabBarActiveTintColor="tomato"
+      >
+        <Tab.Screen
+          name="Đăng nhập"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Đăng ký"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Lấy lại mật khẩu"
+          component={RePassword}
+          options={{ headerShown: false }}
+        />
+      </Tab.Navigator>
+      <View style={styles.logoContainer}>
+        <Image source={require('../images/anhavt.jpg')} style={styles.logo} />
+      </View>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'blue',
-    marginBottom: 20,
-  },
-});
 
 export default StartScreen;
