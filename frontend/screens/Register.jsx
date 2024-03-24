@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { Button, InputItem, WhiteSpace, WingBlank, Provider, Picker, List } from '@ant-design/react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import styles from '../components/StyleSheet';
-// import customStyles from '../components/customStyles';
-// import en_US from '../locales/en_US';
+import React, { useState } from "react";
+import { View, Text, TextInput } from "react-native";
+import {
+  Button,
+  WhiteSpace,
+  WingBlank,
+  Provider,
+} from "@ant-design/react-native";
+import Icon from "react-native-vector-icons/AntDesign";
+import styles from "../components/StyleSheet";
 
 const Register = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [role, setRole] = useState([]);
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleRegister = () => {
     // Xử lý logic đăng ký ở đây
-    console.log('Đăng ký');
+    console.log("Đăng ký");
   };
 
   const goToLogin = () => {
-    navigation.navigate('Đăng nhập');
+    navigation.navigate("Đăng nhập");
   };
 
   const toggleShowPassword = () => {
@@ -32,66 +34,64 @@ const Register = ({ navigation }) => {
       <View style={styles.container}>
         <WingBlank>
           <Text style={styles.title}>Đăng ký</Text>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Username"
-              labelNumber={2}
-              value={username}
-              onChange={(value) => setUsername(value)}
-            >
-              <Icon name="user" style={styles.icon}/>
-            </InputItem>
-          </List>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Email" 
-              labelNumber={2}
-              value={email}
-              onChange={(value) => setEmail(value)}
-            >
-              <Icon name="mail" style={styles.icon}/>
-            </InputItem>
-          </List>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Phone" 
-              labelNumber={2}
-              value={phone}
-              onChange={(value) => setPhone(value)}
-            >
-              <Icon name="phone" style={styles.icon}/>
-            </InputItem>
-          </List>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Mật khẩu" 
-              labelNumber={2}
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(value) => setPassword(value)}
-              extra={<Icon style={styles.icon} name={showPassword ? 'eye' : 'eyeo'} onPress={toggleShowPassword} />}
-            >
-              <Icon name="lock" style={styles.icon}/>
-            </InputItem>
-          </List>
-            <Picker 
-              data={[
-                { value: 'admin', label: 'Admin' },
-                { value: 'store_owner', label: 'Store Owner' },
-                { value: 'customer', label: 'Customer' },
-              ]}
-              cols={1}
-              value={role}
-              onChange={(value) => setRole(value)}
-              okText='Ok'
-              dismissText='Cancel'
-            >
-              <List.Item arrow="horizontal">Role</List.Item>
-            </Picker>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="user" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Username"
+                value={username}
+                onChangeText={(value) => setUsername(value)}
+              />
+            </View>
+          </View>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="mail" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Email"
+                value={email}
+                onChangeText={(value) => setEmail(value)}
+              />
+            </View>
+          </View>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="phone" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Phone"
+                value={phone}
+                onChangeText={(value) => setPhone(value)}
+              />
+            </View>
+          </View>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="lock" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Mật khẩu"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={(value) => setPassword(value)}
+              />
+              <Icon
+                style={{ ...styles.icon, position: "absolute", right: 10 }}
+                name={showPassword ? "eye" : "eyeo"}
+                onPress={toggleShowPassword}
+              />
+            </View>
+          </View>
           <WhiteSpace size="lg" />
-          <Button type="primary" onPress={handleRegister}>Đăng ký</Button>
+          <Button type="primary" style={styles.button} onPress={handleRegister}>
+            Đăng ký
+          </Button>
           <WhiteSpace />
-          <Button onPress={goToLogin}>Đăng nhập</Button>
+          <Button style={styles.button} onPress={goToLogin}>
+            Đăng nhập
+          </Button>
         </WingBlank>
       </View>
     </Provider>
