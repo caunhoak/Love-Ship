@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { Button, InputItem, List, WhiteSpace, WingBlank, Provider } from '@ant-design/react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import styles from '../components/StyleSheet';
+import React, { useState } from "react";
+import { View, Text, TextInput } from "react-native";
+import {
+  Button,
+  WhiteSpace,
+  WingBlank,
+  Provider,
+  Checkbox,
+} from "@ant-design/react-native";
+import Icon from "react-native-vector-icons/AntDesign";
+import styles from "../components/StyleSheet";
 
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [rememberPassword, setRememberPassword] = useState(false);
 
   const handleLogin = () => {
     // Xử lý logic đăng nhập ở đây
-    console.log('Đăng nhập');
+    console.log("Đăng nhập");
   };
 
   const toggleShowPassword = () => {
@@ -19,46 +26,73 @@ const Login = ({ navigation }) => {
   };
 
   const goToRegister = () => {
-    navigation.navigate('Đăng ký');
+    navigation.navigate("Đăng ký");
   };
 
   const goToRePassword = () => {
-    navigation.navigate('Lấy lại mật khẩu');
+    navigation.navigate("Lấy lại mật khẩu");
   };
 
   return (
     <Provider>
       <View style={styles.container}>
         <WingBlank>
-        <Text style={styles.title}>Đăng nhập</Text>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Username"
-              labelNumber={2}
-              value={username}
-              onChange={(value) => setUsername(value)}
+          <Text style={styles.title}>Đăng nhập</Text>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="user" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Username"
+                value={username}
+                onChangeText={(value) => setUsername(value)}
+              />
+            </View>
+          </View>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="lock" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Mật khẩu"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={(value) => setPassword(value)}
+              />
+              <Icon
+                style={{ ...styles.icon, position: "absolute", right: 10 }}
+                name={showPassword ? "eye" : "eyeo"}
+                onPress={toggleShowPassword}
+              />
+            </View>
+          </View>
+          <WhiteSpace />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Checkbox
+              checked={rememberPassword}
+              onChange={(e) => setRememberPassword(e.target.checked)}
             >
-              <Icon name="user" style={styles.icon}/>
-            </InputItem>
-          </List>
-          <List style={styles.listInputItem}>
-            <InputItem 
-              placeholder="Mật khẩu"
-              labelNumber={2}
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(value) => setPassword(value)}
-              extra={<Icon style={styles.icon} name={showPassword ? 'eye' : 'eyeo'} onPress={toggleShowPassword} />}
-            >
-              <Icon style={styles.icon} name="lock" />
-            </InputItem>
-          </List>
+              <Text>Remember password</Text>
+            </Checkbox>
+            <Text style={{ color: "blue" }} onPress={goToRePassword}>
+              Forgot password
+            </Text>
+          </View>
           <WhiteSpace />
-          <Button type="primary" onPress={handleLogin}>Đăng nhập</Button>
           <WhiteSpace />
-          <Button onPress={goToRePassword}>Quên mật khẩu</Button>
+          <Button type="primary" style={styles.button} onPress={handleLogin}>
+            Đăng nhập
+          </Button>
           <WhiteSpace />
-          <Button onPress={goToRegister}>Đăng ký</Button>
+          <Button style={styles.button} onPress={goToRegister}>
+            Đăng ký
+          </Button>
         </WingBlank>
       </View>
     </Provider>
