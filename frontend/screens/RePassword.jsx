@@ -45,10 +45,6 @@ const RePassword = ({ navigation }) => {
           >
             Gửi yêu cầu
           </Button>
-          <WhiteSpace />
-          <Button style={styles.button} onPress={goToLogin}>
-            Đăng nhập
-          </Button>
         </WingBlank>
       </View>
     </Provider>

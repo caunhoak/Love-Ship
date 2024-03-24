@@ -81,7 +81,7 @@ const Login = ({ navigation }) => {
               <Text>Remember password</Text>
             </Checkbox>
             <Text style={{ color: "blue" }} onPress={goToRePassword}>
-              Forgot password
+              Forgot your password?
             </Text>
           </View>
           <WhiteSpace />
