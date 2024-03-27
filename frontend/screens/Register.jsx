@@ -1,30 +1,75 @@
 import React, { useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, Alert } from "react-native";
 import {
   Button,
   WhiteSpace,
   WingBlank,
   Provider,
+  Picker,
+  List,
 } from "@ant-design/react-native";
+import axios from "axios";
 import Icon from "react-native-vector-icons/AntDesign";
 import styles from "../components/StyleSheet";
 
-const Register = ({ navigation }) => {
+const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [role, setRole] = useState(["customer"]);
 
-  const handleRegister = () => {
-    // Xử lý logic đăng ký ở đây
-    console.log("Đăng ký");
+  const handleRegister = async () => {
+    try {
+      // Kiểm tra điều kiện nhập
+      if (!username || !email || !phone || !password || !confirmPassword) {
+        Alert.alert("Please enter all required fields");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        Alert.alert("Password incorrect");
+        return;
+      }
+
+      // Kiểm tra mật khẩu
+      const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        Alert.alert("Password is not secure");
+        return;
+      }
+
+      // Kiểm tra email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Alert.alert("Invalid email");
+        return;
+      }
+
+      const response = await axios.post(
+        "http://192.168.126.1:3000/api/auth/register",
+        {
+          username: username,
+          email: email,
+          phone: phone,
+          password: password,
+          role: role[0], // Assuming role is an array with single value
+        }
+      );
+      console.log(response.data);
+      Alert.alert("Success for register"); // Hiển thị thông báo thành công
+    } catch (error) {
+      console.error("Registration failed:", error);
+      Alert.alert("Registration failed"); // Hiển thị thông báo lỗi
+    }
   };
 
-  const goToLogin = () => {
-    navigation.navigate("Đăng nhập");
-  };
+  // const goToLogin = () => {
+  //   navigation.navigate("Đăng nhập");
+  // };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -102,6 +147,20 @@ const Register = ({ navigation }) => {
               />
             </View>
           </View>
+          <Picker
+            data={[
+              { value: "admin", label: "Admin" },
+              { value: "store_owner", label: "Store Owner" },
+              { value: "customer", label: "Customer" },
+            ]}
+            cols={1}
+            value={role}
+            onChange={(value) => setRole(value)}
+            okText="Ok"
+            dismissText="Cancel"
+          >
+            <List.Item arrow="horizontal">Role</List.Item>
+          </Picker>
           <WhiteSpace size="lg" />
           <Button type="primary" style={styles.button} onPress={handleRegister}>
             Đăng ký
