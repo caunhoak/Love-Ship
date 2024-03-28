@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, Alert } from "react-native";
 import {
   Button,
   WhiteSpace,
@@ -7,6 +7,7 @@ import {
   Provider,
   Checkbox,
 } from "@ant-design/react-native";
+import axios from "axios";
 import Icon from "react-native-vector-icons/AntDesign";
 import styles from "../components/StyleSheet";
 
@@ -16,9 +17,25 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [rememberPassword, setRememberPassword] = useState(false);
 
-  const handleLogin = () => {
-    // Xử lý logic đăng nhập ở đây
-    console.log("Đăng nhập");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.126.1:3000/api/auth/login",
+        {
+          email: username,
+          password: password,
+        }
+      );
+
+      // Nếu đăng nhập thành công, chuyển hướng đến màn hình AccountLogin
+      navigation.navigate("AccountLogin", {
+        username: username,
+        role: response.data.role,
+      });
+    } catch (error) {
+      // Xử lý khi đăng nhập thất bại
+      Alert.alert("Invalid username or password");
+    }
   };
 
   const toggleShowPassword = () => {
@@ -76,7 +93,7 @@ const Login = ({ navigation }) => {
           >
             <Checkbox
               checked={rememberPassword}
-              onChange={(e) => setRememberPassword(e.target.checked)}
+              onChange={(checked) => setRememberPassword(checked)}
             >
               <Text>Remember password</Text>
             </Checkbox>
