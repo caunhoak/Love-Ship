@@ -50,6 +50,10 @@ const styles = StyleSheet.create({
     width: "50%",
     marginLeft: "25%",
   },
+  listPicker: {
+    backgroundColor: "#C0C0C0",
+    borderRadius: 30,
+  },
 });
 
 export default styles;

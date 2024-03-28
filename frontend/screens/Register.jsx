@@ -67,10 +67,6 @@ const Register = () => {
     }
   };
 
-  // const goToLogin = () => {
-  //   navigation.navigate("Đăng nhập");
-  // };
-
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -159,7 +155,9 @@ const Register = () => {
             okText="Ok"
             dismissText="Cancel"
           >
-            <List.Item arrow="horizontal">Role</List.Item>
+            <List.Item arrow="horizontal" style={styles.listPicker}>
+              Role
+            </List.Item>
           </Picker>
           <WhiteSpace size="lg" />
           <Button type="primary" style={styles.button} onPress={handleRegister}>
