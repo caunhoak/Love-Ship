@@ -1,12 +1,12 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
-import { View, Image} from 'react-native';
-import styles from '../components/StyleSheet';
-import Login from './Login';
-import Register from './Register';
-import RePassword from './RePassword';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import { View, Image } from "react-native";
+import styles from "../components/StyleSheet";
+import Login from "./Login";
+import Register from "./Register";
+import RePassword from "./RePassword";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,12 +18,12 @@ const StartScreen = () => {
           tabBarIcon: ({ color, size }) => {
             let iconName;
 
-            if (route.name === 'Đăng nhập') {
-              iconName = 'log-in';
-            } else if (route.name === 'Đăng ký') {
-              iconName = 'person-add';
-            } else if (route.name === 'Lấy lại mật khẩu') {
-              iconName = 'lock-closed';
+            if (route.name === "Đăng nhập") {
+              iconName = "log-in";
+            } else if (route.name === "Đăng ký") {
+              iconName = "person-add";
+            } else if (route.name === "Lấy lại mật khẩu") {
+              iconName = "lock-closed";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -49,7 +49,7 @@ const StartScreen = () => {
         />
       </Tab.Navigator>
       <View style={styles.logoContainer}>
-        <Image source={require('../images/anhavt.jpg')} style={styles.logo} />
+        <Image source={require("../images/anhavt.jpg")} style={styles.logo} />
       </View>
     </NavigationContainer>
   );

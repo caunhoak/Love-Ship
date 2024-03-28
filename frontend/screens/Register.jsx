@@ -12,6 +12,7 @@ import styles from "../components/StyleSheet";
 const Register = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -32,7 +33,7 @@ const Register = ({ navigation }) => {
   return (
     <Provider>
       <View style={styles.container}>
-        <WingBlank>
+        <WingBlank style={styles.wingBlank}>
           <Text style={styles.title}>Đăng ký</Text>
           <View style={styles.viewInputContainer}>
             <View style={styles.viewInput}>
@@ -84,13 +85,26 @@ const Register = ({ navigation }) => {
               />
             </View>
           </View>
+          <View style={styles.viewInputContainer}>
+            <View style={styles.viewInput}>
+              <Icon name="lock" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Xác nhận mật khẩu"
+                secureTextEntry={!showPassword}
+                value={confirmPassword}
+                onChangeText={(value) => setConfirmPassword(value)}
+              />
+              <Icon
+                style={{ ...styles.icon, position: "absolute", right: 10 }}
+                name={showPassword ? "eye" : "eyeo"}
+                onPress={toggleShowPassword}
+              />
+            </View>
+          </View>
           <WhiteSpace size="lg" />
           <Button type="primary" style={styles.button} onPress={handleRegister}>
             Đăng ký
-          </Button>
-          <WhiteSpace />
-          <Button style={styles.button} onPress={goToLogin}>
-            Đăng nhập
           </Button>
         </WingBlank>
       </View>

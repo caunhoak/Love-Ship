@@ -24,7 +24,7 @@ const RePassword = ({ navigation }) => {
   return (
     <Provider>
       <View style={styles.container}>
-        <WingBlank>
+        <WingBlank style={styles.wingBlank}>
           <Text style={styles.title}>Lấy lại mật khẩu</Text>
           <View style={styles.viewInputContainer}>
             <View style={styles.viewInput}>
@@ -44,10 +44,6 @@ const RePassword = ({ navigation }) => {
             onPress={handleForgotPassword}
           >
             Gửi yêu cầu
-          </Button>
-          <WhiteSpace />
-          <Button style={styles.button} onPress={goToLogin}>
-            Đăng nhập
           </Button>
         </WingBlank>
       </View>
