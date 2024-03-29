@@ -1,6 +1,6 @@
 // AuthButton.js
-import React from 'react';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React from "react";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 
 const AuthButton = ({ title, onPress }) => {
   return (
@@ -12,15 +12,16 @@ const AuthButton = ({ title, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     padding: 10,
-    borderRadius: 5,
-    width: '80%',
-    alignItems: 'center',
+    borderRadius: 30,
+    width: "80%",
+    alignItems: "center",
+    marginBottom: 10,
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
