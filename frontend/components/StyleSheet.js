@@ -3,10 +3,13 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#808080",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   wingBlank: {
-    paddingTop: "50%",
+    // paddingTop: "50%",
+    margin: "10%",
   },
   logoContainer: {
     position: "absolute",
@@ -29,6 +32,11 @@ const styles = StyleSheet.create({
   viewInputContainer: {
     marginBottom: 10,
   },
+  viewPicker: {
+    flexDirection: "row",
+    backgroundColor: "#C0C0C0",
+    borderRadius: 30,
+  },
   viewInput: {
     flexDirection: "row",
     alignItems: "center",
@@ -49,6 +57,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: "50%",
     marginLeft: "25%",
+  },
+  listPicker: {
+    backgroundColor: "#C0C0C0",
+    borderRadius: 30,
   },
 });
 
