@@ -15,10 +15,7 @@
     "body-parser": "^1.20.2",
     "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD
-=======
     "mongodb": "^6.5.0",
->>>>>>> 0c22292bd3c25968bf32ec1c5d879b741e73bda0
     "mongoose": "^8.2.3",
     "socket.io": "^4.7.4"
   }
