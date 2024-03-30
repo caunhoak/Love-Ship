@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const User = require("../models/User");
 
 // Function to hash the password before saving to database
@@ -8,15 +9,30 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, salt);
 };
 
+// Cấu hình transporter (máy chủ gửi email)
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "votechobe1@gmail.com",
+    pass: "jnqh obwx mmif mzlz",
+  },
+});
+
 // Controller function to register a new user
 exports.register = async (req, res) => {
   try {
     const { username, password, email, phone, role } = req.body;
 
     // Check if username already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
       return res.status(400).json({ message: "Username already exists" });
+    }
+
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "Email already exists" });
     }
 
     // Hash the password
@@ -123,11 +139,16 @@ exports.requestPasswordReset = async (req, res) => {
     // Generate reset token
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetToken = resetToken;
-    user.resetTokenExpiry = Date.now() + 3600000; // Expire in 1 hour
+    user.resetTokenExpiry = Date.now() + 60000; // Expire in 1 minute
     await user.save();
 
-    // Send reset token to user via email or SMS
-    // SendEmailOrSms(user.email, resetToken);
+    // Send reset token to user via email
+    await transporter.sendMail({
+      from: "votechobe1@gmail.com",
+      to: email,
+      subject: "Password Reset Request",
+      text: `Your password reset token is: ${resetToken}`,
+    });
 
     res.json({ message: "Reset token sent successfully" });
   } catch (error) {
