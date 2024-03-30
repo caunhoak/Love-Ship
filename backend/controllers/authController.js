@@ -1,87 +1,166 @@
-// Controller xử lý logic liên quan đến xác thực người dùng
-// const bcrypt = require("bcrypt"); // ma hoa password
-
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const User = require("../models/User");
 
-// // Xử lý đăng nhập
-// exports.login = async (req, res) => {
-//   try {
-//     // Thực hiện xác thực người dùng, ví dụ: sử dụng email và mật khẩu
-//     const { email, password } = req.body;
-
-//     // Kiểm tra xem người dùng có tồn tại không
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ message: "Người dùng không tồn tại." });
-//     }
-
-//     // So sánh mật khẩu
-//     const isPasswordMatch = await bcrypt.compare(password, user.password);
-//     if (!isPasswordMatch) {
-//       return res.status(401).json({ message: "Mật khẩu không chính xác." });
-//     }
-
-//     // Đăng nhập thành công
-//     res.status(200).json({ message: "Đăng nhập thành công." });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// Xử lý đăng nhập
-exports.login = async (req, res) => {
-  try {
-    // Thực hiện xác thực người dùng, ví dụ: sử dụng email và mật khẩu
-    const { email, password } = req.body;
-
-    // Kiểm tra xem người dùng có tồn tại không
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "Người dùng không tồn tại." });
-    }
-
-    // Kiểm tra mật khẩu
-    if (user.password !== password) {
-      return res.status(401).json({ message: "Mật khẩu không chính xác." });
-    }
-
-    // Đăng nhập thành công
-    res.status(200).json({ message: "Đăng nhập thành công." });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+// Function to hash the password before saving to database
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
 };
 
-// Xử lý đăng ký
+// Controller function to register a new user
 exports.register = async (req, res) => {
   try {
-    // Tạo một người dùng mới từ dữ liệu đăng ký
-    const newUser = new User(req.body);
-    await newUser.save();
+    const { username, password, email, phone, role } = req.body;
 
-    // Đăng ký thành công
-    res.status(201).json({ message: "Đăng ký thành công." });
+    // Check if username already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
+    // Hash the password
+    const hashedPassword = await hashPassword(password);
+
+    // Create new user
+    const newUser = new User({
+      username,
+      password: hashedPassword,
+      email,
+      phone,
+      role,
+    });
+
+    // Save user to database
+    await newUser.save();
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Lấy danh sách tất cả người dùng
+// Controller function to login a user
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Find user by username
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    // Determine which screen to navigate based on user role
+    let redirectScreen;
+    switch (user.role) {
+      case "admin":
+        redirectScreen = "AdminScreen";
+        break;
+      case "store_owner":
+        redirectScreen = "StoreScreen";
+        break;
+      case "customer":
+        redirectScreen = "CustomerScreen";
+        break;
+      default:
+        redirectScreen = "DefaultScreen";
+        break;
+    }
+
+    // Here you can send any additional data along with the redirectScreen
+    res.json({ redirectScreen });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Controller function to get all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).json(users);
+    res.json(users);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Cập nhật thông tin người dùng
+// Controller function to update user information
 exports.updateUser = async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.params.userId, req.body);
-    res.status(200).json({ message: "Thông tin người dùng đã được cập nhật." });
+    const userId = req.params.userId;
+    const updates = req.body;
+
+    // Update user
+    await User.findByIdAndUpdate(userId, updates);
+
+    res.json({ message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Controller function to request password reset
+exports.requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = Date.now() + 3600000; // Expire in 1 hour
+    await user.save();
+
+    // Send reset token to user via email or SMS
+    // SendEmailOrSms(user.email, resetToken);
+
+    res.json({ message: "Reset token sent successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Controller function to reset password
+exports.resetPassword = async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body;
+
+    // Find user by reset token
+    const user = await User.findOne({ resetToken });
+    if (!user || user.resetTokenExpiry < Date.now()) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset token" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await hashPassword(newPassword);
+
+    // Update user's password and clear reset token
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
