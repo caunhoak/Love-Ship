@@ -16,4 +16,7 @@ router.get("/user", authController.getAllUsers);
 // Route cập nhật thông tin người dùng
 router.put("/user/:userId", authController.updateUser);
 
+//http://192.168.1.39:3000/api/auth/google/redirect
+//google/redirect
+
 module.exports = router;

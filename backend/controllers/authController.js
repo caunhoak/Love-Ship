@@ -136,10 +136,18 @@ exports.requestPasswordReset = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate reset token
-    const resetToken = crypto.randomBytes(20).toString("hex");
+    // // Generate reset token
+    // const resetToken = crypto.randomBytes(20).toString("hex");
+    // user.resetToken = resetToken;
+    // user.resetTokenExpiry = Date.now() + 180000; // Expire in 3 minute
+    // await user.save();
+
+    // // Generate reset token
+    const resetToken = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0");
     user.resetToken = resetToken;
-    user.resetTokenExpiry = Date.now() + 60000; // Expire in 1 minute
+    user.resetTokenExpiry = Date.now() + 180000; // Expire in 3 minute
     await user.save();
 
     // Send reset token to user via email
