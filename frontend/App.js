@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
-import AccountLogin from "./screens/AdminScreen";
+import AdminScreen from "./screens/AdminScreen";
 // import StoreScreen from "./screens/StoreScreen";
 // import CustomerScreen from "./screens/CustomerScreen";
 
@@ -13,7 +13,10 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Start">
+      <Stack.Navigator
+        initialRouteName="Start"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="Login"
           component={Login}
@@ -31,7 +34,7 @@ const App = () => {
         />
         <Stack.Screen
           name="AccountLogin"
-          component={AccountLogin}
+          component={AdminScreen}
           options={{ title: "Admin" }}
         />
         {/* <Stack.Screen
