@@ -119,7 +119,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import AuthButton from "../components/AuthButton";
 import styles from "../components/StyleSheet";
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -157,7 +157,7 @@ const Register = () => {
       }
 
       const response = await axios.post(
-        "http://192.168.126.1:3000/api/auth/register",
+        "http://192.168.1.39:3000/api/auth/login",
         {
           username: username,
           email: email,
@@ -187,31 +187,9 @@ const Register = () => {
             <Icon name="user" style={styles.icon} />
             <TextInput
               style={styles.textInput}
-              placeholder="Username"
+              placeholder="Tên đăng nhập"
               value={username}
               onChangeText={(value) => setUsername(value)}
-            />
-          </View>
-        </View>
-        <View style={styles.viewInputContainer}>
-          <View style={styles.viewInput}>
-            <Icon name="mail" style={styles.icon} />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Email"
-              value={email}
-              onChangeText={(value) => setEmail(value)}
-            />
-          </View>
-        </View>
-        <View style={styles.viewInputContainer}>
-          <View style={styles.viewInput}>
-            <Icon name="phone" style={styles.icon} />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Phone"
-              value={phone}
-              onChangeText={(value) => setPhone(value)}
             />
           </View>
         </View>
@@ -249,7 +227,28 @@ const Register = () => {
             />
           </View>
         </View>
-
+        <View style={styles.viewInputContainer}>
+          <View style={styles.viewInput}>
+            <Icon name="mail" style={styles.icon} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              value={email}
+              onChangeText={(value) => setEmail(value)}
+            />
+          </View>
+        </View>
+        <View style={styles.viewInputContainer}>
+          <View style={styles.viewInput}>
+            <Icon name="phone" style={styles.icon} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Phone"
+              value={phone}
+              onChangeText={(value) => setPhone(value)}
+            />
+          </View>
+        </View>
         <TouchableOpacity style={styles.viewPicker}>
           <Picker
             selectedValue={role}
@@ -265,6 +264,10 @@ const Register = () => {
         </TouchableOpacity>
       </View>
       <AuthButton title="Đăng ký" onPress={handleRegister} />
+      <AuthButton
+        title="Đăng nhập"
+        onPress={() => navigation.goBack("Login")}
+      />
     </View>
   );
 };
