@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Alert } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import styles from "../components/StyleSheet";
-import AuthButton from "../components/AuthButton";
+import styles from "../../components/StyleSheet";
+import AuthButton from "../../components/AuthButton";
 import axios from "axios"; // Import axios for making HTTP requests
 
 const ResetPassword = ({ navigation, route }) => {
