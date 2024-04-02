@@ -20,8 +20,8 @@ import * as Network from "expo-network";
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -37,9 +37,8 @@ const Login = ({ navigation }) => {
         console.error("Permission to access internet was denied");
         return;
       }
-
       // Tiến hành đăng nhập Google
-      const authUrl = "http://192.168.1.39:3000/auth/google/redirect";
+      const authUrl = "http://192.168.1.39:3000/auth/google";
       const response = await WebBrowser.openAuthSessionAsync(authUrl);
       const { type: responseType, url } = response;
       if (responseType === "success") {
