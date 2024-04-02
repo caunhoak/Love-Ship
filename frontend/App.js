@@ -4,10 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
-import AdminScreen from "./screens/AdminScreen";
-import ResetPassword from "./screens/ResetPassword";
-// import StoreScreen from "./screens/StoreScreen";
-// import CustomerScreen from "./screens/CustomerScreen";
+import AdminScreen from "./screens/handlerAdmin/AdminScreen";
+import ResetPassword from "./screens/handlerPassword/ResetPassword";
+import EditUser from "./screens/handlerAdmin/EditUser";
 
 const Stack = createStackNavigator();
 
@@ -43,11 +42,11 @@ const App = () => {
           component={ResetPassword}
           options={{ title: "Lấy lại mật khẩu" }}
         />
-        {/* <Stack.Screen
-          name="CustomerScreen"
-          component={CustomerScreen}
+        <Stack.Screen
+          name="EditUser"
+          component={EditUser}
           options={{ title: "Khách hàng" }}
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

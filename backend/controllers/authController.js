@@ -109,17 +109,33 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Controller function to get user by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // Controller function to update user information
 exports.updateUser = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.params.userId; // Đổi từ req.params.id thành req.params.userId
     const updates = req.body;
     const { email, username } = req.body;
 
     // Check if the email being updated already exists
     if (email) {
       const existingUser = await User.findOne({ email });
-      if (existingUser && existingUser._id.toString() !== req.params.id) {
+      if (existingUser && existingUser._id.toString() !== userId) {
+        // Sử dụng userId ở đây
         return res.status(400).json({
           status: "fail",
           message: "Email already exists. Please use a different email.",
