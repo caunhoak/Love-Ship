@@ -1,12 +1,13 @@
+// GoogleUser.js
+
 const mongoose = require("mongoose");
 
 const googleUserSchema = new mongoose.Schema({
   googleId: String,
   displayName: String,
   email: String,
-  // Thêm các trường khác nếu cần
+  // Các trường thông tin người dùng khác
 });
 
 const GoogleUser = mongoose.model("GoogleUser", googleUserSchema);
-
 module.exports = GoogleUser;

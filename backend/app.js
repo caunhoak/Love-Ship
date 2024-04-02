@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const dbConfig = require("./config/dbConfig");
-const GoogleUser = require("./models/GoogleUser"); // Import GoogleUser model
+const GoogleUser = require("./models/GoogleUser");
+const session = require("express-session");
 
 // Import các route và controllers
 const authRoutes = require("./routes/authRoutes");
@@ -12,6 +13,18 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 
 const app = express();
+
+// Sử dụng express-session
+app.use(
+  session({
+    secret: "your_secret_key", // Thay đổi "your_secret_key" bằng một chuỗi bất kỳ
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+// Middleware passport.initialize() và passport.session() phải được sử dụng sau express-session
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Sử dụng middleware để xử lý các yêu cầu JSON
 app.use(bodyParser.json());
@@ -24,50 +37,49 @@ dbConfig.on("error", (err) => {
   console.error("MongoDB connection error:", err);
 });
 
-// Thiết lập Passport.js cho xác thực Google
 passport.use(
   new GoogleStrategy(
     {
       clientID:
-        "104607557430-tt28f2e11sdpcrhd90icr487uqmjjtk5.apps.googleusercontent.com",
-      clientSecret: "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",
+        "277645049944-gqvrj3rtecikasg01dh6v6tnj6545364.apps.googleusercontent.com",
+      clientSecret: "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",
       callbackURL: "http://localhost:3000/auth/google/redirect",
     },
-    function (accessToken, refreshToken, profile, done) {
-      GoogleUser.findOne(
-        { googleId: profile.id },
-        function (err, existingUser) {
-          if (err) {
-            return done(err);
-          }
-          if (existingUser) {
-            // Nếu đã tồn tại, trả về thông tin của user
-            return done(null, existingUser);
-          } else {
-            // Nếu chưa tồn tại, tạo một bản ghi mới
-            const newUser = new GoogleUser({
-              googleId: profile.id,
-              displayName: profile.displayName,
-              email: profile.emails[0].value,
-              // Thêm các trường khác nếu cần
-            });
-            // Lưu vào MongoDB
-            newUser.save(function (err) {
-              if (err) {
-                return done(err);
-              }
-              return done(null, newUser);
-            });
-          }
-          return done(null, profile);
+    async function (accessToken, refreshToken, profile, done) {
+      console.log(profile);
+      try {
+        let existingUser = await GoogleUser.findOne({ googleId: profile.id });
+        if (existingUser) {
+          return done(null, existingUser);
+        } else {
+          let newGoogleUser = new GoogleUser({
+            googleId: profile.id,
+            displayName: profile.displayName,
+            email: profile.emails[0].value,
+          });
+          let savedGoogleUser = await newGoogleUser.save();
+          return done(null, savedGoogleUser);
         }
-      );
+      } catch (error) {
+        return done(error, false);
+      }
     }
   )
 );
+// Serialize và deserialize user
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
 
-// Middleware Passport.js
-app.use(passport.initialize());
+passport.deserializeUser(function (id, done) {
+  GoogleUser.findById(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((error) => {
+      done(error, null);
+    });
+});
 
 // Endpoint xác thực Google
 app.get(
@@ -77,7 +89,7 @@ app.get(
 
 app.get(
   "/auth/google/redirect",
-  passport.authenticate("google", { failureRedirect: "/api/auth/login" }),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     // Xác thực thành công, chuyển hướng hoặc phản hồi gì đó
     res.redirect("/");
