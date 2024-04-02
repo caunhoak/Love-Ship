@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
-const authGoogle = require("../controllers/authGoogle");
 
 // Định nghĩa các route cho xác thực người dùng
 router.post("/login", authController.login);
@@ -16,5 +15,7 @@ router.post("/reset-password", authController.resetPassword);
 router.get("/user", authController.getAllUsers);
 // Route cập nhật thông tin người dùng
 router.put("/user/:userId", authController.updateUser);
+// Route xóa thông tin người dùng
+router.delete("/user/:userId", authController.deleteUser);
 
 module.exports = router;
