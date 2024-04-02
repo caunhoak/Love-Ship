@@ -95,7 +95,7 @@ const Login = ({ navigation }) => {
   };
 
   const goToRegister = () => {
-    navigation.navigate("SignUp");
+    navigation.navigate("Register");
   };
 
   const goToRePassword = () => {

@@ -114,6 +114,26 @@ exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     const updates = req.body;
+    const { email, username } = req.body;
+
+    // Check if the email being updated already exists
+    if (email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== req.params.id) {
+        return res.status(400).json({
+          status: "fail",
+          message: "Email already exists. Please use a different email.",
+        });
+      }
+    }
+
+    // Ensure username cannot be updated
+    if (username) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Username cannot be updated.",
+      });
+    }
 
     // Update user
     await User.findByIdAndUpdate(userId, updates);
@@ -122,6 +142,37 @@ exports.updateUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Controller function to delete a user
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Attempt to find and delete the user
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    // If no user found with the given ID, return an error
+    if (!deletedUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    // If user is successfully deleted, return success message
+    res.status(200).json({
+      status: "success",
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    // If an error occurs during deletion, return internal server error
+    console.error(error);
+    res.status(500).json({
+      status: "fail",
+      message: "Internal server error",
+    });
   }
 };
 
@@ -135,12 +186,6 @@ exports.requestPasswordReset = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // // Generate reset token
-    // const resetToken = crypto.randomBytes(20).toString("hex");
-    // user.resetToken = resetToken;
-    // user.resetTokenExpiry = Date.now() + 180000; // Expire in 3 minute
-    // await user.save();
 
     // // Generate reset token
     const resetToken = Math.floor(Math.random() * 16777215)

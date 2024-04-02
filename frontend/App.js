@@ -5,6 +5,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
 import AdminScreen from "./screens/AdminScreen";
+import ResetPassword from "./screens/ResetPassword";
 // import StoreScreen from "./screens/StoreScreen";
 // import CustomerScreen from "./screens/CustomerScreen";
 
@@ -23,7 +24,7 @@ const App = () => {
           options={{ title: "Đăng nhập" }}
         />
         <Stack.Screen
-          name="SignUp"
+          name="Register"
           component={Register}
           options={{ title: "Đăng ký" }}
         />
@@ -37,12 +38,12 @@ const App = () => {
           component={AdminScreen}
           options={{ title: "Admin" }}
         />
-        {/* <Stack.Screen
-          name="StoreScreen"
-          component={StoreScreen}
-          options={{ title: "Quản lý cửa hàng" }}
-        />
         <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={{ title: "Lấy lại mật khẩu" }}
+        />
+        {/* <Stack.Screen
           name="CustomerScreen"
           component={CustomerScreen}
           options={{ title: "Khách hàng" }}
