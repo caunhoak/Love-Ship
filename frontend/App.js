@@ -5,7 +5,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
 import AdminScreen from "./screens/handlerAdmin/AdminScreen";
-// import UserManagementScreen from "./screens/UserManagementScreen";
+import UserManagementScreen from "./screens/UserManagementScreen";
 import ResetPassword from "./screens/handlerPassword/ResetPassword";
 import EditUser from "./screens/handlerAdmin/EditUser";
 
@@ -34,8 +34,13 @@ const App = () => {
           options={{ title: "Quên mật khẩu" }}
         />
         <Stack.Screen
-          name="AccountLogin"
+          name="AdminScreen"
           component={AdminScreen}
+          options={{ title: "Admin" }}
+        />
+        <Stack.Screen
+          name="CustomerScreen"
+          component={UserManagementScreen}
           options={{ title: "Admin" }}
         />
         <Stack.Screen
