@@ -1,52 +1,83 @@
-// Controller xử lý logic liên quan đến quản lý cửa hàng và sản phẩm
 const Store = require("../models/Store");
 
-// Lấy danh sách tất cả cửa hàng
+// Controller để lấy tất cả cửa hàng
 exports.getAllStores = async (req, res) => {
   try {
     const stores = await Store.find();
-    res.status(200).json(stores);
+    res.json(stores);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Tạo cửa hàng mới
-exports.createStore = async (req, res) => {
-  try {
-    const newStore = new Store(req.body);
-    await newStore.save();
-    res.status(201).json({ message: "Cửa hàng mới đã được tạo." });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Lấy thông tin cửa hàng theo ID
+// Controller để lấy thông tin của một cửa hàng theo ID
 exports.getStoreById = async (req, res) => {
   try {
-    const store = await Store.findById(req.params.storeId);
-    res.status(200).json(store);
+    const store = await Store.findById(req.params.id);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+    res.json(store);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Cập nhật thông tin cửa hàng
+exports.createStore = async (req, res) => {
+  const store = new Store({
+    name: req.body.name,
+    owner_id: req.body.owner_id,
+    address: req.body.address,
+    phone: req.body.phone,
+  });
+
+  try {
+    if (req.file) {
+      store.logo_data = req.file.buffer;
+      store.logo_contentType = req.file.mimetype;
+    }
+
+    const newStore = await store.save();
+    res.status(201).json(newStore);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 exports.updateStore = async (req, res) => {
   try {
-    await Store.findByIdAndUpdate(req.params.storeId, req.body);
-    res.status(200).json({ message: "Thông tin cửa hàng đã được cập nhật." });
+    const store = await Store.findById(req.params.id);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    // Cập nhật thông tin cửa hàng
+    store.name = req.body.name || store.name;
+    store.address = req.body.address || store.address;
+    store.phone = req.body.phone || store.phone;
+
+    if (req.file) {
+      store.logo_data = req.file.buffer;
+      store.logo_contentType = req.file.mimetype;
+    }
+
+    const updatedStore = await store.save();
+    res.json(updatedStore);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
-// Xóa cửa hàng
+// Controller để xóa một cửa hàng
 exports.deleteStore = async (req, res) => {
   try {
-    await Store.findByIdAndDelete(req.params.storeId);
-    res.status(200).json({ message: "Cửa hàng đã được xóa." });
+    const store = await Store.findById(req.params.id);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    await store.remove();
+    res.json({ message: "Store deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

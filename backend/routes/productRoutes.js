@@ -1,20 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const productController = require('../controllers/productController'); // Import controller
+const productController = require("../controllers/productController");
+const upload = require("../middlewares/fileUploadMiddleware");
 
-// Route lấy danh sách tất cả sản phẩm
-router.get('/', productController.getAllProducts);
+// Lấy tất cả sản phẩm
+router.get("/", productController.getAllProducts);
 
-// Route tạo sản phẩm mới
-router.post('/', productController.createProduct);
+// Lấy thông tin của một sản phẩm theo ID
+router.get("/:id", productController.getProductById);
 
-// Route lấy thông tin sản phẩm theo ID
-router.get('/:productId', productController.getProductById);
+// Tạo mới một sản phẩm với hỗ trợ tải ảnh
+router.post("/", upload.single("image"), productController.createProduct);
 
-// Route cập nhật thông tin sản phẩm
-router.put('/:productId', productController.updateProduct);
+// Cập nhật thông tin của một sản phẩm
+router.put("/:id", upload.single("image"), productController.updateProduct);
 
-// Route xóa sản phẩm
-router.delete('/:productId', productController.deleteProduct);
+// Xóa một sản phẩm
+router.delete("/:id", productController.deleteProduct);
 
 module.exports = router;

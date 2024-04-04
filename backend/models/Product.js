@@ -1,14 +1,13 @@
-// Model cho sản phẩm
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    price: Number,
-    image: String,
-    store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' }
+  name: String,
+  price: Number,
+  image_data: Buffer, // Dữ liệu nhị phân của ảnh
+  image_contentType: String, // Loại của dữ liệu nhị phân (ví dụ: 'image/png', 'image/jpeg')
+  description: String,
 });
 
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;

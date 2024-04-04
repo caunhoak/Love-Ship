@@ -1,13 +1,23 @@
-// Định nghĩa các route liên quan đến quản lý cửa hàng và sản phẩm
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const storeController = require('../controllers/storeController');
+const storeController = require("../controllers/storeController");
+const upload = require("../middlewares/fileUploadMiddleware");
 
-// Định nghĩa các route cho quản lý cửa hàng và sản phẩm
-router.get('/', storeController.getAllStores);
-router.post('/', storeController.createStore);
-router.get('/:storeId', storeController.getStoreById);
-router.put('/:storeId', storeController.updateStore);
-router.delete('/:storeId', storeController.deleteStore);
+// Định nghĩa các route cho các phương thức CRUD
+
+// Lấy tất cả cửa hàng
+router.get("/", storeController.getAllStores);
+
+// Lấy thông tin của một cửa hàng theo ID
+router.get("/:id", storeController.getStoreById);
+
+// Tạo một cửa hàng mới với hỗ trợ tải ảnh
+router.post("/", upload.single("logo"), storeController.createStore);
+
+// Cập nhật thông tin của một cửa hàng
+router.put("/:id", upload.single("logo"), storeController.updateStore);
+
+// Xóa một cửa hàng
+router.delete("/:id", storeController.deleteStore);
 
 module.exports = router;
