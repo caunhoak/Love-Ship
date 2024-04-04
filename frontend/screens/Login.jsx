@@ -61,26 +61,17 @@ const Login = ({ navigation }) => {
       );
 
       if (checked) {
-        // Lưu username nếu người dùng chọn checkbox
         await AsyncStorage.setItem("savedUsername", username);
-        // Lưu mật khẩu nếu người dùng chọn checkbox "Lưu mật khẩu"
         await SecureStore.setItemAsync("savedPassword", password);
-        // Lưu trạng thái checkbox
         await AsyncStorage.setItem("isChecked", "true");
       } else {
-        // Xóa username đã lưu nếu người dùng không chọn checkbox
         await AsyncStorage.removeItem("savedUsername");
-        // Xóa mật khẩu đã lưu nếu người dùng không chọn checkbox
         await SecureStore.deleteItemAsync("savedPassword");
-        // Xóa trạng thái checkbox
         await AsyncStorage.removeItem("isChecked");
       }
 
-      // Chuyển hướng đến màn hình AccountLogin
-      navigation.navigate("AccountLogin", {
-        username: username,
-        role: response.data.role, // Thay thế bằng dữ liệu vai trò thích hợp từ phản hồi API
-      });
+      const { redirectScreen } = response.data;
+      navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
     } catch (error) {
       Alert.alert("Tên người dùng hoặc mật khẩu không hợp lệ");
     }
