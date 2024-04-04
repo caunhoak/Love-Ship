@@ -1,13 +1,17 @@
-// Định nghĩa các route liên quan đến quản lý đơn hàng
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const orderController = require('../controllers/orderController');
+const orderController = require("../controllers/orderController");
 
-// Định nghĩa các route cho quản lý đơn hàng
-router.get('/', orderController.getAllOrders);
-router.post('/', orderController.createOrder);
-router.get('/:orderId', orderController.getOrderById);
-router.put('/:orderId', orderController.updateOrder);
-router.delete('/:orderId', orderController.deleteOrder);
+// Route để lấy tất cả các đơn hàng
+router.get("/", orderController.getAllOrders);
+
+// Route để tạo đơn hàng mới
+router.post("/", orderController.createOrder);
+
+// Route để cập nhật đơn hàng
+router.put("/:id", orderController.updateOrder);
+
+// Route để xóa đơn hàng
+router.delete("/:id", orderController.deleteOrder);
 
 module.exports = router;
