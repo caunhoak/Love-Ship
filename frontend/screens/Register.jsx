@@ -46,7 +46,7 @@ const Register = ({ navigation }) => {
       }
 
       const response = await axios.post(
-        "http://192.168.1.39:3000/api/auth/login",
+        "http://192.168.1.39:3000/api/auth/register",
         {
           username: username,
           email: email,
@@ -57,6 +57,7 @@ const Register = ({ navigation }) => {
       );
       console.log(response.data);
       Alert.alert("Success for register"); // Hiển thị thông báo thành công
+      navigation.goBack("Login");
     } catch (error) {
       console.error("Registration failed:", error);
       Alert.alert("Registration failed"); // Hiển thị thông báo lỗi

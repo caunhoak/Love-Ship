@@ -53,7 +53,7 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.39:3000/api/auth/login",
+        `http://192.168.1.39:3000/api/auth/login`,
         {
           username: username,
           password: password,

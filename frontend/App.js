@@ -5,6 +5,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
 import AdminScreen from "./screens/handlerAdmin/AdminScreen";
+// import UserManagementScreen from "./screens/UserManagementScreen";
 import ResetPassword from "./screens/handlerPassword/ResetPassword";
 import EditUser from "./screens/handlerAdmin/EditUser";
 
