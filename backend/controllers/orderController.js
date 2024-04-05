@@ -1,50 +1,110 @@
 const Order = require("../models/Order");
 
-// Controller để lấy tất cả các đơn hàng
+// Lấy tất cả các đơn hàng
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Controller để tạo đơn hàng mới
+// Tạo mới một đơn hàng
 exports.createOrder = async (req, res) => {
   const order = new Order({
     user_id: req.body.user_id,
     total_price: req.body.total_price,
+    created_at: new Date(),
+    status: "Pending",
   });
 
   try {
     const newOrder = await order.save();
     res.status(201).json(newOrder);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
-// Controller để cập nhật đơn hàng
-exports.updateOrder = async (req, res) => {
+// Xem thông tin của một đơn hàng dựa trên ID
+exports.getOrderById = async (req, res) => {
   try {
-    const updatedOrder = await Order.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.status(200).json(updatedOrder);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Controller để xóa đơn hàng
-exports.deleteOrder = async (req, res) => {
+// Xác nhận một đơn hàng
+exports.confirmOrder = async (req, res) => {
   try {
-    await Order.findByIdAndDelete(req.params.id);
-    res.status(204).end();
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    order.status = "Confirmed";
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Vận chuyển một đơn hàng
+exports.shipOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    order.status = "Shipping";
+    // Logic để xác định ngày dự kiến giao hàng
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Hoàn thành một đơn hàng
+exports.completeOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    order.status = "Completed";
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Hủy một đơn hàng
+exports.cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    order.status = "Cancelled";
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

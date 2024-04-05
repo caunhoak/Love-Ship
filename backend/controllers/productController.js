@@ -31,6 +31,8 @@ exports.createProduct = async (req, res) => {
     image_data: req.file ? req.file.buffer : null, // Lưu dữ liệu nhị phân của ảnh
     image_contentType: req.file ? req.file.mimetype : null, // Lưu loại của dữ liệu nhị phân
     description: req.body.description,
+    delivery_time: req.body.delivery_time, // Thêm thông tin về thời gian giao hàng
+    completion_time: req.body.completion_time, // Thêm thông tin về thời gian hoàn thành
   });
 
   try {
@@ -56,6 +58,8 @@ exports.updateProduct = async (req, res) => {
       product.image_contentType = req.file.mimetype;
     }
     product.description = req.body.description;
+    product.delivery_time = req.body.delivery_time; // Thêm thông tin về thời gian giao hàng
+    product.completion_time = req.body.completion_time; // Thêm thông tin về thời gian hoàn thành
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
