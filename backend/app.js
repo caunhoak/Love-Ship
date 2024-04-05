@@ -15,7 +15,7 @@ const productRoutes = require("./routes/productRoutes");
 const storeMenuRoutes = require("./routes/storeMenuRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const cartItemRoutes = require("./routes/cartItemRoutes");
-const transactionRoute = require("./routes/transactionRoute");
+const paymentRoute = require("./routes/paymentRoute");
 const reviewRouter = require("./routes/reviewRoute");
 
 const app = express();
@@ -114,7 +114,7 @@ app.use("/api/order-items", orderItemRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/carts", cartRoutes);
 app.use("/api/cart-items", cartItemRoutes);
-app.use("/api/transactions", transactionRoute);
+app.use("/api/transactions", paymentRoute);
 app.use("/reviews", reviewRouter);
 
 // Xử lý lỗi cho các route không tồn tại hoặc lỗi khác
