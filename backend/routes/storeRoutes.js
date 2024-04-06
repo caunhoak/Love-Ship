@@ -20,4 +20,7 @@ router.put("/:id", upload.single("logo"), storeController.updateStore);
 // Xóa một cửa hàng
 router.delete("/:id", storeController.deleteStore);
 
+// Route để lấy ảnh của cửa hàng
+router.get("/:id/image", storeController.getStoreImage);
+
 module.exports = router;

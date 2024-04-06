@@ -82,3 +82,19 @@ exports.deleteStore = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// controllers/storeController.js
+exports.getStoreImage = async (req, res) => {
+  try {
+    const store = await Store.findById(req.params.id);
+
+    if (!store || !store.logo_data) {
+      return res.status(404).json({ message: "Store or image not found" });
+    }
+
+    res.set("Content-Type", store.logo_contentType);
+    res.send(store.logo_data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
