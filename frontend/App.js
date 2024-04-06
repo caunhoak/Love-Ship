@@ -5,9 +5,11 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import ForgotPasswordScreen from "./screens/RePassword";
 import AdminScreen from "./screens/handlerAdmin/AdminScreen";
-import UserManagementScreen from "./screens/UserManagementScreen";
+import StoreScreen from "./screens/handlerStore/StoreScreen";
+// import UserManagementScreen from "./screens/UserManagementScreen";
 import ResetPassword from "./screens/handlerPassword/ResetPassword";
 import EditUser from "./screens/handlerAdmin/EditUser";
+import ProductListScreen from "./screens/handlerProduct/ProductListScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,9 +41,14 @@ const App = () => {
           options={{ title: "Admin" }}
         />
         <Stack.Screen
+          name="StoreScreen"
+          component={StoreScreen}
+          options={{ title: "Store" }}
+        />
+        <Stack.Screen
           name="CustomerScreen"
-          component={UserManagementScreen}
-          options={{ title: "Admin" }}
+          component={ProductListScreen}
+          options={{ title: "Customer" }}
         />
         <Stack.Screen
           name="ResetPassword"

@@ -103,10 +103,15 @@ const Login = ({ navigation }) => {
         const savedPassword = await SecureStore.getItemAsync("savedPassword");
         if (savedUsername !== null && savedPassword !== null) {
           // Nếu có dữ liệu đăng nhập đã được lưu trữ, chuyển hướng trực tiếp đến trang AccountLogin
-          navigation.navigate("AccountLogin", {
-            username: savedUsername,
-            role: "user", // Thay thế bằng dữ liệu vai trò thích hợp từ phản hồi API
-          });
+          const response = await axios.post(
+            "http://192.168.1.39:3000/api/auth/login",
+            {
+              username: savedUsername,
+              password: savedPassword,
+            }
+          );
+          const { redirectScreen } = response.data;
+          navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
         }
       }
     } catch (error) {
