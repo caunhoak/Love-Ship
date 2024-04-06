@@ -18,4 +18,7 @@ router.put("/:id", upload.single("image"), productController.updateProduct);
 // Xóa một sản phẩm
 router.delete("/:id", productController.deleteProduct);
 
+// Lấy dữ liệu ảnh của sản phẩm
+router.get("/:id/image", productController.getProductImage);
+
 module.exports = router;

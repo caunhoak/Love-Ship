@@ -25,18 +25,20 @@ exports.getProductById = async (req, res) => {
 
 // Tạo mới một sản phẩm
 exports.createProduct = async (req, res) => {
-  const product = new Product({
-    name: req.body.name,
-    price: req.body.price,
-    image_data: req.file ? req.file.buffer : null, // Lưu dữ liệu nhị phân của ảnh
-    image_contentType: req.file ? req.file.mimetype : null, // Lưu loại của dữ liệu nhị phân
-    description: req.body.description,
-    delivery_time: req.body.delivery_time, // Thêm thông tin về thời gian giao hàng
-    completion_time: req.body.completion_time, // Thêm thông tin về thời gian hoàn thành
-  });
+  const { name, price, description, delivery_time, completion_time } = req.body;
+  const image_data = req.file ? req.file.buffer : null;
+  const image_contentType = req.file ? req.file.mimetype : null;
 
   try {
-    const newProduct = await product.save();
+    const newProduct = await Product.create({
+      name,
+      price,
+      description,
+      delivery_time,
+      completion_time,
+      image_data,
+      image_contentType,
+    });
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -51,15 +53,17 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Sản phẩm không tồn tại" });
     }
 
-    product.name = req.body.name;
-    product.price = req.body.price;
+    const { name, price, description, delivery_time, completion_time } =
+      req.body;
+    if (name) product.name = name;
+    if (price) product.price = price;
+    if (description) product.description = description;
+    if (delivery_time) product.delivery_time = delivery_time;
+    if (completion_time) product.completion_time = completion_time;
     if (req.file) {
       product.image_data = req.file.buffer;
       product.image_contentType = req.file.mimetype;
     }
-    product.description = req.body.description;
-    product.delivery_time = req.body.delivery_time; // Thêm thông tin về thời gian giao hàng
-    product.completion_time = req.body.completion_time; // Thêm thông tin về thời gian hoàn thành
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -78,6 +82,20 @@ exports.deleteProduct = async (req, res) => {
 
     await product.remove();
     res.json({ message: "Sản phẩm đã được xóa" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Lấy dữ liệu ảnh của sản phẩm từ MongoDB
+exports.getProductImage = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product || !product.image_data) {
+      return res.status(404).json({ message: "Không tìm thấy ảnh sản phẩm" });
+    }
+    res.set("Content-Type", product.image_contentType); // Đặt loại nội dung cho phản hồi
+    res.send(product.image_data); // Trả về dữ liệu ảnh
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

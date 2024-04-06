@@ -1,17 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
-
-// const UserManagementScreen = () => {
-//   const navigation = useNavigation();
-//   return (
-//     <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-//       <AuthButton title="Đăng xuất" onPress={() => navigation.goBack()} />
-//       <AuthButton
-//         title="Đăng ký"
-//         onPress={() => navigation.navigate("SignUp")}
-//       />
-//     </View>
-//   );
-// };
 import { View, Text, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import AuthButton from "../components/AuthButton";
