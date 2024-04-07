@@ -65,6 +65,10 @@ const ProductListScreen = () => {
     updateCartAndQuantities(updatedCart, updatedQuantities);
   };
 
+  const handleCartOrder = () => {
+    console.log("Order");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -85,11 +89,7 @@ const ProductListScreen = () => {
           />
           <MaterialIcons name="search" size={24} color="black" />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            /* Xử lý khi nhấn vào icon giỏ hàng */
-          }}
-        >
+        <TouchableOpacity onPress={handleCartOrder}>
           <MaterialIcons name="shopping-cart" size={24} color="black" />
           <View style={styles.cartBadge}>
             <Text style={styles.cartBadgeText}>
@@ -131,19 +131,17 @@ const ProductListScreen = () => {
               style={styles.detailButton}
               onPress={() => {
                 // Thực hiện xử lý khi nhấn vào nút "detail"
-                console.log("Detail button pressed");
+                console.log("Chi tiết sản phẩm");
               }}
             >
-              <Text style={styles.detailButtonText}>Detail</Text>
+              <Text style={styles.detailButtonText}>Chi tiết sản phẩm</Text>
             </TouchableOpacity>
           </View>
         )}
       />
-      <Button
-        // onPress={onPressLearnMore}
-        title="Mua hàng"
-        color="#841584"
-      />
+      <TouchableOpacity style={styles.button} onPress={handleCartOrder}>
+        <Text style={styles.touchInput}>Đi đến giỏ hàng</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -207,6 +205,15 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  button: {
+    backgroundColor: "#0069d9",
+    padding: 10,
+    borderRadius: 10,
+  },
+  touchInput: {
+    textAlign: "center",
+    color: "white",
   },
   quantityButtons: {
     flexDirection: "row",

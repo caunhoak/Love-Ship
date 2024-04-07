@@ -43,7 +43,7 @@ const EditUserScreen: React.FC<EditUserProps> = ({ route, navigation }) => {
     axios
       .put(`http://192.168.1.39:3000/api/auth/user/${userId}`, updates)
       .then((response) => {
-        navigation.navigate("AccountLogin");
+        navigation.goBack();
       })
       .catch((error) => {
         console.error("Error updating user:", error);

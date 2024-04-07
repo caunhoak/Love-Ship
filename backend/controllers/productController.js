@@ -66,6 +66,7 @@ exports.updateProduct = async (req, res) => {
     }
 
     const updatedProduct = await product.save();
+    console.log(req.file);
     res.json(updatedProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -80,7 +81,7 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Sản phẩm không tồn tại" });
     }
 
-    await product.remove();
+    await product.deleteOne(); // Sử dụng phương thức deleteOne() thay vì remove()
     res.json({ message: "Sản phẩm đã được xóa" });
   } catch (err) {
     res.status(500).json({ message: err.message });
