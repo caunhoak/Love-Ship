@@ -5,8 +5,8 @@ import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import Icon from "react-native-vector-icons/AntDesign";
-import AuthButton from "../components/AuthButton";
-import styles from "../components/StyleSheet";
+import AuthButton from "../../components/AuthButton";
+import styles from "../../components/StyleSheet";
 
 const Register = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);

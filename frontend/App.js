@@ -1,15 +1,18 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "./screens/Login";
-import Register from "./screens/Register";
-import ForgotPasswordScreen from "./screens/RePassword";
-import AdminScreen from "./screens/handlerAdmin/AdminScreen";
-import StoreScreen from "./screens/handlerStore/StoreScreen";
+import Login from "./screens/Auth/Login";
+import Register from "./screens/Auth/Register";
+import ForgotPasswordScreen from "./screens/Auth/RePassword";
+import AdminScreen from "./screens/Admin/AdminScreen";
+import CustomerScreen from "./screens/CustomerScreen/Customer";
+import ResetPassword from "./screens/Auth/ResetPassword";
+import EditUser from "./screens/Admin/EditUser";
 // import UserManagementScreen from "./screens/UserManagementScreen";
-import ResetPassword from "./screens/handlerPassword/ResetPassword";
-import EditUser from "./screens/handlerAdmin/EditUser";
-import ProductListScreen from "./screens/handlerProduct/ProductListScreen";
+import ProductList from "./screens/CustomerScreen/ProductList";
+import StoreScreen from "./screens/StoreOwnerScreen/StoreOwner";
+import EditProductScreen from "./screens/Product/EditProductScreen";
+import AddProductScreen from "./screens/Product/AddProductScreen";
 
 const Stack = createStackNavigator();
 
@@ -41,14 +44,14 @@ const App = () => {
           options={{ title: "Admin" }}
         />
         <Stack.Screen
+          name="CustomerScreen"
+          component={CustomerScreen}
+          options={{ title: "Customer" }}
+        />
+        <Stack.Screen
           name="StoreScreen"
           component={StoreScreen}
           options={{ title: "Store" }}
-        />
-        <Stack.Screen
-          name="CustomerScreen"
-          component={ProductListScreen}
-          options={{ title: "Customer" }}
         />
         <Stack.Screen
           name="ResetPassword"
@@ -59,6 +62,21 @@ const App = () => {
           name="EditUser"
           component={EditUser}
           options={{ title: "Khách hàng" }}
+        />
+        <Stack.Screen
+          name="ProductList"
+          component={ProductList}
+          options={{ title: "Store" }}
+        />
+        <Stack.Screen
+          name="EditProductScreen"
+          component={EditProductScreen}
+          options={{ title: "Store" }}
+        />
+        <Stack.Screen
+          name="AddProductScreen"
+          component={AddProductScreen}
+          options={{ title: "Store" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

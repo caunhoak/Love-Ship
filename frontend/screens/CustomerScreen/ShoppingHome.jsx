@@ -2,14 +2,20 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   Image,
   TouchableOpacity,
   FlatList,
 } from "react-native";
 import axios from "axios";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native"; // Import hook useNavigation
 
-const StoreScreen = () => {
+const HomeScreen = () => {
+  const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
+  const [searchText, setSearchText] = useState("");
+
   const [stores, setStores] = useState([]);
 
   // Lấy danh sách cửa hàng từ backend
@@ -40,29 +46,37 @@ const StoreScreen = () => {
       )}
       <Text style={styles.storeInfo}>{item.address}</Text>
       <Text style={styles.storeInfo}>{item.phone}</Text>
+      <TouchableOpacity style={styles.button} onPress={handleStore}>
+        <Text style={styles.touchInput}>Xem cửa hàng</Text>
+      </TouchableOpacity>
     </View>
   );
 
+  const handleStore = () => {
+    navigation.navigate("ProductList");
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>TÌM KIẾM CỬA HÀNG</Text>
+      <View style={styles.header}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Tìm kiếm cửa hàng"
+            onChangeText={(text) => setSearchText(text)}
+            value={searchText}
+          />
+          <MaterialIcons name="search" size={24} color="black" />
+        </View>
+      </View>
       <FlatList
-        data={stores}
+        data={stores.filter((store) =>
+          store.name.toLowerCase().includes(searchText.toLowerCase())
+        )}
         renderItem={renderStoreItem}
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.storeList}
       />
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Shopping</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Cart</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Chat</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -73,10 +87,24 @@ const styles = StyleSheet.create({
     padding: "3%",
   },
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
-    textAlign: "center",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    padding: "3%",
+    margin: "3%",
+    flex: 1,
+  },
+  searchInput: {
+    flex: 1,
   },
   storeList: {
     paddingBottom: "3%",
@@ -91,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: "2%",
+    textAlign: "center",
   },
   logo: {
     width: "100%",
@@ -100,17 +129,17 @@ const styles = StyleSheet.create({
   },
   storeInfo: {
     marginBottom: "1%",
+    textAlign: "center",
   },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: "3%",
-  },
-  footerButton: {
-    padding: "3%",
-    backgroundColor: "#f0f0f0",
+  button: {
+    backgroundColor: "#0069d9",
+    padding: 10,
     borderRadius: 10,
+  },
+  touchInput: {
+    textAlign: "center",
+    color: "white",
   },
 });
 
-export default StoreScreen;
+export default HomeScreen;

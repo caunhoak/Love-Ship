@@ -11,8 +11,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Icon from "react-native-vector-icons/AntDesign";
-import styles from "../components/StyleSheet";
-import AuthButton from "../components/AuthButton";
+import styles from "../../components/StyleSheet";
+import AuthButton from "../../components/AuthButton";
 import { CheckBox } from "@rneui/base";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
