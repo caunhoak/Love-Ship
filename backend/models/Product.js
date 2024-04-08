@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
   name: String,
+  store_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store", // Tham chiếu đến model Store
+  },
   price: Number,
   image_data: Buffer, // Dữ liệu nhị phân của ảnh
   image_contentType: String, // Loại của dữ liệu nhị phân (ví dụ: 'image/png', 'image/jpeg')

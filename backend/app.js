@@ -12,7 +12,6 @@ const storeRoutes = require("./routes/storeRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const orderItemRoutes = require("./routes/orderItemRoutes");
 const productRoutes = require("./routes/productRoutes");
-const storeMenuRoutes = require("./routes/storeMenuRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const cartItemRoutes = require("./routes/cartItemRoutes");
 const paymentRoute = require("./routes/paymentRoute");
@@ -108,7 +107,6 @@ app.use(express.json());
 // Sử dụng các route đã được định nghĩa
 app.use("/api/auth", authRoutes);
 app.use("/api/stores", storeRoutes);
-app.use("/api/store-menu", storeMenuRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/order-items", orderItemRoutes);
 app.use("/api/products", productRoutes);
