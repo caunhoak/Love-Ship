@@ -61,10 +61,6 @@ const RegisterStoreScreen = () => {
         console.error("No storeId returned from server");
         Alert.alert("Lỗi đăng nhập", "Không có storeId trả về từ máy chủ");
       }
-
-      // const storeId = storeResponse.data._id;
-      // console.log("StoreId created:", storeId);
-      // navigation.navigate("StoreOwner", { storeId });
     } catch (error) {
       console.error("Error creating store:", error);
       Alert.alert("Error", "Failed to create store.");
