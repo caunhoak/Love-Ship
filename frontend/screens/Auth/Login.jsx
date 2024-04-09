@@ -50,33 +50,6 @@ const Login = ({ navigation }) => {
     }
   };
 
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://192.168.1.39:3000/api/auth/login",
-  //       {
-  //         username: username,
-  //         password: password,
-  //       }
-  //     );
-
-  //     if (checked) {
-  //       await AsyncStorage.setItem("savedUsername", username);
-  //       await SecureStore.setItemAsync("savedPassword", password);
-  //       await AsyncStorage.setItem("isChecked", "true");
-  //     } else {
-  //       await AsyncStorage.removeItem("savedUsername");
-  //       await SecureStore.deleteItemAsync("savedPassword");
-  //       await AsyncStorage.removeItem("isChecked");
-  //     }
-
-  //     const { redirectScreen } = response.data;
-  //     navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
-  //   } catch (error) {
-  //     Alert.alert("Tên người dùng hoặc mật khẩu không hợp lệ");
-  //   }
-  // };
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(

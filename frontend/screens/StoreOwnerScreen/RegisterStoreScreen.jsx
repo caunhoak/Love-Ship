@@ -21,25 +21,10 @@ const RegisterStoreScreen = () => {
   const [logo, setLogo] = useState(null);
   const navigation = useNavigation();
 
-  const getUserId = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      if (userId !== null) {
-        console.log("UserId của người dùng đang đăng nhập:", userId);
-        return userId;
-      } else {
-        console.log("Không có userId trong AsyncStorage");
-        return null;
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy userId từ AsyncStorage:", error);
-      return null;
-    }
-  };
-
   const handleRegister = async () => {
     try {
-      const owner_id = await getUserId();
+      const owner_id = await AsyncStorage.getItem("userId");
+      console.log("owner_id:", owner_id);
 
       const formData = new FormData();
       formData.append("name", name);
@@ -64,9 +49,22 @@ const RegisterStoreScreen = () => {
           },
         }
       );
-
       const storeId = storeResponse.data._id;
-      navigation.navigate("StoreOwner", { storeId });
+      console.log(storeResponse.data);
+      console.log("StoreId created:", storeId);
+      if (storeId) {
+        // Lưu userId vào AsyncStorage
+        await AsyncStorage.setItem("storeId", storeId);
+
+        navigation.navigate("StoreOwner");
+      } else {
+        console.error("No storeId returned from server");
+        Alert.alert("Lỗi đăng nhập", "Không có storeId trả về từ máy chủ");
+      }
+
+      // const storeId = storeResponse.data._id;
+      // console.log("StoreId created:", storeId);
+      // navigation.navigate("StoreOwner", { storeId });
     } catch (error) {
       console.error("Error creating store:", error);
       Alert.alert("Error", "Failed to create store.");

@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddProductScreen = () => {
   const [productName, setProductName] = useState("");
@@ -36,8 +37,11 @@ const AddProductScreen = () => {
 
   const handleSubmit = async () => {
     try {
+      const storeId = await AsyncStorage.getItem("storeId");
+      console.log("Store_id la:", storeId);
       const formData = new FormData();
       formData.append("name", productName);
+      formData.append("store_id", storeId);
       formData.append("price", productPrice);
       formData.append("description", productDescription);
       formData.append("delivery_time", productDeliveryTime);
@@ -49,7 +53,7 @@ const AddProductScreen = () => {
       });
 
       const response = await axios.post(
-        "http://192.168.1.39:3000/api/products",
+        `http://192.168.1.39:3000/api/products`,
         formData,
         {
           headers: {
@@ -69,6 +73,7 @@ const AddProductScreen = () => {
       setProductImage(null);
 
       navigation.navigate("Sản phẩm");
+      // navigation.goBack();
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to add product!");

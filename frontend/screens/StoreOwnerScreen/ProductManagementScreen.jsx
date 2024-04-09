@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductManagementScreen = () => {
   const navigation = useNavigation();
@@ -17,8 +18,13 @@ const ProductManagementScreen = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://192.168.1.39:3000/api/products");
-      setProducts(response.data);
+      const storeId = await AsyncStorage.getItem("storeId");
+
+      const response = await axios.get(
+        `http://192.168.1.39:3000/stores/${storeId}`
+      );
+      const { products } = response.data; // Trích xuất danh sách sản phẩm từ response.data
+      setProducts(products);
     } catch (error) {
       console.error(error);
     }
