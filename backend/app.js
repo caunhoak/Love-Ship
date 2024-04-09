@@ -100,8 +100,17 @@ app.get(
   "/auth/google/redirect",
   passport.authenticate("google", { failureRedirect: "/" }),
   function (req, res) {
-    // Xác thực thành công, chuyển hướng hoặc phản hồi gì đó
-    res.redirect("/");
+    if (req.user) {
+      // Kiểm tra xem người dùng đã tồn tại trong hệ thống hay không
+      let redirectScreen;
+      // Chọn màn hình phù hợp với vai trò
+      redirectScreen = "CustomerScreen";
+      // Chuyển hướng đến trang tương ứng
+      res.redirect(`/${redirectScreen}`);
+    } else {
+      // Xử lý khi không tìm thấy người dùng
+      res.redirect("/");
+    }
   }
 );
 
@@ -152,7 +161,7 @@ app.get("/stores/:storeId", async (req, res) => {
 });
 
 // Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
-app.get("/stores/:storeId/products", async (req, res) => {
+app.get("/stores/:storeId/products/:productId", async (req, res) => {
   const { storeId, productId } = req.params;
   try {
     const store = await Store.findById(storeId);

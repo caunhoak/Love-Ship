@@ -56,48 +56,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// // Controller function to login a user
-// exports.login = async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     // Find user by username
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Check password
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-//     if (!passwordMatch) {
-//       return res.status(401).json({ message: "Invalid password" });
-//     }
-
-//     // Determine which screen to navigate based on user role
-//     let redirectScreen;
-//     switch (user.role) {
-//       case "admin":
-//         redirectScreen = "AdminScreen";
-//         break;
-//       case "store_owner":
-//         redirectScreen = "StoreScreen";
-//         break;
-//       case "customer":
-//         redirectScreen = "CustomerScreen";
-//         break;
-//       default:
-//         redirectScreen = "DefaultScreen";
-//         break;
-//     }
-
-//     // Here you can send any additional data along with the redirectScreen
-//     res.json({ redirectScreen });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 // Controller function to login a user
 exports.login = async (req, res) => {
   try {
