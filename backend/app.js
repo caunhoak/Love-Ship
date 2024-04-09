@@ -17,6 +17,10 @@ const cartItemRoutes = require("./routes/cartItemRoutes");
 const paymentRoute = require("./routes/paymentRoute");
 const reviewRouter = require("./routes/reviewRoute");
 
+//import models
+const Store = require("./models/Store");
+const Product = require("./models/Product");
+
 const app = express();
 
 // Sử dụng express-session
@@ -96,8 +100,17 @@ app.get(
   "/auth/google/redirect",
   passport.authenticate("google", { failureRedirect: "/" }),
   function (req, res) {
-    // Xác thực thành công, chuyển hướng hoặc phản hồi gì đó
-    res.redirect("/");
+    if (req.user) {
+      // Kiểm tra xem người dùng đã tồn tại trong hệ thống hay không
+      let redirectScreen;
+      // Chọn màn hình phù hợp với vai trò
+      redirectScreen = "CustomerScreen";
+      // Chuyển hướng đến trang tương ứng
+      res.redirect(`/${redirectScreen}`);
+    } else {
+      // Xử lý khi không tìm thấy người dùng
+      res.redirect("/");
+    }
   }
 );
 
@@ -114,6 +127,57 @@ app.use("/api/carts", cartRoutes);
 app.use("/api/cart-items", cartItemRoutes);
 app.use("/api/transactions", paymentRoute);
 app.use("/reviews", reviewRouter);
+
+// Endpoint: Lấy tất cả danh sách các Store và danh sách các Product tương ứng với mỗi Store
+app.get("/stores", async (req, res) => {
+  try {
+    const stores = await Store.find();
+    const storesWithProducts = await Promise.all(
+      stores.map(async (store) => {
+        const products = await Product.find({ store_id: store._id });
+        return { store, products };
+      })
+    );
+    res.send(storesWithProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
+app.get("/stores/:storeId", async (req, res) => {
+  const storeId = req.params.storeId;
+  try {
+    const store = await Store.findById(storeId);
+    if (!store) return res.status(404).send("Store not found");
+
+    const products = await Product.find({ store_id: store._id });
+    res.send({ store, products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
+app.get("/stores/:storeId/products/:productId", async (req, res) => {
+  const { storeId, productId } = req.params;
+  try {
+    const store = await Store.findById(storeId);
+    if (!store) return res.status(404).send("Store not found");
+    const product = await Product.findOne({
+      _id: productId,
+      store_id: store._id,
+    });
+    if (!product)
+      return res.status(404).send("Product not found in this store");
+    res.send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // Xử lý lỗi cho các route không tồn tại hoặc lỗi khác
 app.use((req, res, next) => {

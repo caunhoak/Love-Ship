@@ -11,24 +11,28 @@ import {
 } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ProductListScreen = () => {
   const [products, setProducts] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
   const [productQuantities, setProductQuantities] = useState({});
+  const route = useRoute(); // Sử dụng hook useRoute để truy cập vào route
+  const { storeId } = route.params; // Lấy storeId từ route params
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchProducts(storeId); // Sử dụng storeId để fetch sản phẩm từ cửa hàng tương ứng
+  }, [storeId]); // Fetch lại sản phẩm khi storeId thay đổi
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (storeId) => {
     try {
-      const response = await axios.get("http://192.168.1.39:3000/api/products");
-      setProducts(response.data);
+      const response = await axios.get(
+        `http://192.168.1.39:3000/stores/${storeId}`
+      );
+      setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -67,6 +71,11 @@ const ProductListScreen = () => {
 
   const handleCartOrder = () => {
     console.log("Order");
+  };
+
+  const handleDetailProducts = (productId) => {
+    // Chuyển hướng sang trang chi tiết sản phẩm và truyền storeId và productId
+    navigate("ProductDetail", { storeId, productId });
   };
 
   return (
@@ -129,10 +138,7 @@ const ProductListScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.detailButton}
-              onPress={() => {
-                // Thực hiện xử lý khi nhấn vào nút "detail"
-                console.log("Chi tiết sản phẩm");
-              }}
+              onPress={() => handleDetailProducts(item._id)}
             >
               <Text style={styles.detailButtonText}>Chi tiết sản phẩm</Text>
             </TouchableOpacity>
