@@ -136,15 +136,14 @@ app.get("/stores", async (req, res) => {
   }
 });
 
+// Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
 app.get("/stores/:storeId", async (req, res) => {
   const storeId = req.params.storeId;
   try {
     const store = await Store.findById(storeId);
     if (!store) return res.status(404).send("Store not found");
-    let products = await Product.find({ store_id: store._id });
-    if (!Array.isArray(products)) {
-      products = []; // Gán products thành một mảng trống nếu nó không phải là một mảng
-    }
+
+    const products = await Product.find({ store_id: store._id });
     res.send({ store, products });
   } catch (error) {
     console.error(error);
