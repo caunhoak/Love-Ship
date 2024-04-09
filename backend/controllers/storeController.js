@@ -38,6 +38,9 @@ exports.createStore = async (req, res) => {
     }
 
     const newStore = await store.save();
+    const storeId = newStore._id; // Lấy _id của cửa hàng mới tạo
+
+    console.log("StoreId created:", storeId); // Log _id của cửa hàng mới tạo
     res.status(201).json(newStore);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -83,7 +86,6 @@ exports.deleteStore = async (req, res) => {
   }
 };
 
-// controllers/storeController.js
 exports.getStoreImage = async (req, res) => {
   try {
     const store = await Store.findById(req.params.id);

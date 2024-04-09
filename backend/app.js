@@ -17,6 +17,10 @@ const cartItemRoutes = require("./routes/cartItemRoutes");
 const paymentRoute = require("./routes/paymentRoute");
 const reviewRouter = require("./routes/reviewRoute");
 
+//import models
+const Store = require("./models/Store");
+const Product = require("./models/Product");
+
 const app = express();
 
 // Sử dụng express-session
@@ -114,6 +118,58 @@ app.use("/api/carts", cartRoutes);
 app.use("/api/cart-items", cartItemRoutes);
 app.use("/api/transactions", paymentRoute);
 app.use("/reviews", reviewRouter);
+
+// Endpoint: Lấy tất cả danh sách các Store và danh sách các Product tương ứng với mỗi Store
+app.get("/stores", async (req, res) => {
+  try {
+    const stores = await Store.find();
+    const storesWithProducts = await Promise.all(
+      stores.map(async (store) => {
+        const products = await Product.find({ store_id: store._id });
+        return { store, products };
+      })
+    );
+    res.send(storesWithProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/stores/:storeId", async (req, res) => {
+  const storeId = req.params.storeId;
+  try {
+    const store = await Store.findById(storeId);
+    if (!store) return res.status(404).send("Store not found");
+    let products = await Product.find({ store_id: store._id });
+    if (!Array.isArray(products)) {
+      products = []; // Gán products thành một mảng trống nếu nó không phải là một mảng
+    }
+    res.send({ store, products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
+app.get("/stores/:storeId/products", async (req, res) => {
+  const { storeId, productId } = req.params;
+  try {
+    const store = await Store.findById(storeId);
+    if (!store) return res.status(404).send("Store not found");
+    const product = await Product.findOne({
+      _id: productId,
+      store_id: store._id,
+    });
+    if (!product)
+      return res.status(404).send("Product not found in this store");
+    res.send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // Xử lý lỗi cho các route không tồn tại hoặc lỗi khác
 app.use((req, res, next) => {
