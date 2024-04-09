@@ -46,14 +46,18 @@ const HomeScreen = () => {
       )}
       <Text style={styles.storeInfo}>{item.address}</Text>
       <Text style={styles.storeInfo}>{item.phone}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleStore}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleStore(item._id)} // Truyền storeId vào hàm handleStore
+      >
         <Text style={styles.touchInput}>Xem cửa hàng</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const handleStore = () => {
-    navigation.navigate("ProductList");
+  const handleStore = (storeId) => {
+    // Nhận storeId như một tham số
+    navigation.navigate("ProductList", { storeId }); // Chuyển hướng và truyền storeId
   };
 
   return (
