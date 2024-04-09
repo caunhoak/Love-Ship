@@ -50,6 +50,33 @@ const Login = ({ navigation }) => {
     }
   };
 
+  // const handleLogin = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://192.168.1.39:3000/api/auth/login",
+  //       {
+  //         username: username,
+  //         password: password,
+  //       }
+  //     );
+
+  //     if (checked) {
+  //       await AsyncStorage.setItem("savedUsername", username);
+  //       await SecureStore.setItemAsync("savedPassword", password);
+  //       await AsyncStorage.setItem("isChecked", "true");
+  //     } else {
+  //       await AsyncStorage.removeItem("savedUsername");
+  //       await SecureStore.deleteItemAsync("savedPassword");
+  //       await AsyncStorage.removeItem("isChecked");
+  //     }
+
+  //     const { redirectScreen } = response.data;
+  //     navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
+  //   } catch (error) {
+  //     Alert.alert("Tên người dùng hoặc mật khẩu không hợp lệ");
+  //   }
+  // };
+
   const handleLogin = async () => {
     try {
       const response = await axios.post(
@@ -60,20 +87,30 @@ const Login = ({ navigation }) => {
         }
       );
 
-      if (checked) {
-        await AsyncStorage.setItem("savedUsername", username);
-        await SecureStore.setItemAsync("savedPassword", password);
-        await AsyncStorage.setItem("isChecked", "true");
-      } else {
-        await AsyncStorage.removeItem("savedUsername");
-        await SecureStore.deleteItemAsync("savedPassword");
-        await AsyncStorage.removeItem("isChecked");
-      }
+      const { redirectScreen, userId } = response.data;
 
-      const { redirectScreen } = response.data;
-      navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
+      if (userId) {
+        // Lưu userId vào AsyncStorage
+        await AsyncStorage.setItem("userId", userId);
+
+        if (checked) {
+          await AsyncStorage.setItem("savedUsername", username);
+          await SecureStore.setItemAsync("savedPassword", password);
+          await AsyncStorage.setItem("isChecked", "true");
+        } else {
+          await AsyncStorage.removeItem("savedUsername");
+          await SecureStore.deleteItemAsync("savedPassword");
+          await AsyncStorage.removeItem("isChecked");
+        }
+
+        navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
+      } else {
+        console.error("No userId returned from server");
+        Alert.alert("Lỗi đăng nhập", "Không có userId trả về từ máy chủ");
+      }
     } catch (error) {
-      Alert.alert("Tên người dùng hoặc mật khẩu không hợp lệ");
+      console.error("Error logging in:", error);
+      Alert.alert("Lỗi đăng nhập", "Tên người dùng hoặc mật khẩu không hợp lệ");
     }
   };
 

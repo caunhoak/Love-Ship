@@ -2,22 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
 
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  phone: string;
-  role: string;
-}
-
-interface EditUserProps {
-  route: { params: { userId: string } };
-  navigation: any;
-}
-
-const EditUserScreen: React.FC<EditUserProps> = ({ route, navigation }) => {
+const EditUserScreen = ({ route, navigation }) => {
   const { userId } = route.params;
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState({
     _id: "",
     username: "",
     email: "",
@@ -27,7 +14,7 @@ const EditUserScreen: React.FC<EditUserProps> = ({ route, navigation }) => {
 
   useEffect(() => {
     axios
-      .get<User>(`http://192.168.1.39:3000/api/auth/user/${userId}`)
+      .get(`http://192.168.1.39:3000/api/auth/user/${userId}`)
       .then((response) => {
         setUser(response.data);
       })
@@ -37,7 +24,6 @@ const EditUserScreen: React.FC<EditUserProps> = ({ route, navigation }) => {
   }, [userId]);
 
   const handleSaveChanges = () => {
-    // Loại bỏ trường _id và username khỏi dữ liệu gửi đi
     const { _id, username, ...updates } = user;
 
     axios

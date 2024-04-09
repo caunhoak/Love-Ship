@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const storeController = require("../controllers/storeController");
-const upload = require("../middlewares/fileUploadMiddleware");
-
-// Định nghĩa các route cho các phương thức CRUD
+const upload = require("../middlewares/fileUploadMiddleware"); // Giữ nguyên middleware tải tệp nếu cần
 
 // Lấy tất cả cửa hàng
 router.get("/", storeController.getAllStores);
@@ -11,7 +9,7 @@ router.get("/", storeController.getAllStores);
 // Lấy thông tin của một cửa hàng theo ID
 router.get("/:id", storeController.getStoreById);
 
-// Tạo một cửa hàng mới với hỗ trợ tải ảnh
+// Đăng ký cửa hàng
 router.post("/", upload.single("logo"), storeController.createStore);
 
 // Cập nhật thông tin của một cửa hàng

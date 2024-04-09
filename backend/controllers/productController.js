@@ -25,7 +25,8 @@ exports.getProductById = async (req, res) => {
 
 // Tạo mới một sản phẩm
 exports.createProduct = async (req, res) => {
-  const { name, price, description, delivery_time, completion_time } = req.body;
+  const { name, price, description, delivery_time, completion_time, store_id } =
+    req.body;
   const image_data = req.file ? req.file.buffer : null;
   const image_contentType = req.file ? req.file.mimetype : null;
 
@@ -38,6 +39,7 @@ exports.createProduct = async (req, res) => {
       completion_time,
       image_data,
       image_contentType,
+      store_id, // Thêm store_id vào dữ liệu sản phẩm mới
     });
     res.status(201).json(newProduct);
   } catch (err) {
@@ -53,20 +55,26 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Sản phẩm không tồn tại" });
     }
 
-    const { name, price, description, delivery_time, completion_time } =
-      req.body;
+    const {
+      name,
+      price,
+      description,
+      delivery_time,
+      completion_time,
+      store_id,
+    } = req.body;
     if (name) product.name = name;
     if (price) product.price = price;
     if (description) product.description = description;
     if (delivery_time) product.delivery_time = delivery_time;
     if (completion_time) product.completion_time = completion_time;
+    if (store_id) product.store_id = store_id; // Cập nhật store_id nếu được cung cấp
     if (req.file) {
       product.image_data = req.file.buffer;
       product.image_contentType = req.file.mimetype;
     }
 
     const updatedProduct = await product.save();
-    console.log(req.file);
     res.json(updatedProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -81,7 +89,7 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Sản phẩm không tồn tại" });
     }
 
-    await product.deleteOne(); // Sử dụng phương thức deleteOne() thay vì remove()
+    await product.deleteOne();
     res.json({ message: "Sản phẩm đã được xóa" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -95,8 +103,8 @@ exports.getProductImage = async (req, res) => {
     if (!product || !product.image_data) {
       return res.status(404).json({ message: "Không tìm thấy ảnh sản phẩm" });
     }
-    res.set("Content-Type", product.image_contentType); // Đặt loại nội dung cho phản hồi
-    res.send(product.image_data); // Trả về dữ liệu ảnh
+    res.set("Content-Type", product.image_contentType);
+    res.send(product.image_data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
