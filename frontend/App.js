@@ -14,6 +14,7 @@ import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen"
 import EditProductScreen from "./screens/Product/EditProductScreen";
 import AddProductScreen from "./screens/Product/AddProductScreen";
 import StoreOwner from "./screens/StoreOwnerScreen/StoreOwner";
+import ProductDetailScreen from "./screens/Product/ProductDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -73,6 +74,11 @@ const App = () => {
           name="ProductList"
           component={ProductList}
           options={{ title: "Store" }}
+        />
+        <Stack.Screen
+          name="ProductDetail"
+          component={ProductDetailScreen}
+          options={{ title: "Chi Tiết sản phẩm" }}
         />
         <Stack.Screen
           name="EditProductScreen"

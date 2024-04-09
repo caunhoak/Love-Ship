@@ -21,7 +21,7 @@ const ProductListScreen = () => {
   const route = useRoute(); // Sử dụng hook useRoute để truy cập vào route
   const { storeId } = route.params; // Lấy storeId từ route params
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
 
   useEffect(() => {
     fetchProducts(storeId); // Sử dụng storeId để fetch sản phẩm từ cửa hàng tương ứng
@@ -71,6 +71,11 @@ const ProductListScreen = () => {
 
   const handleCartOrder = () => {
     console.log("Order");
+  };
+
+  const handleDetailProducts = (productId) => {
+    // Chuyển hướng sang trang chi tiết sản phẩm và truyền storeId và productId
+    navigate("ProductDetail", { storeId, productId });
   };
 
   return (
@@ -133,10 +138,7 @@ const ProductListScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.detailButton}
-              onPress={() => {
-                // Thực hiện xử lý khi nhấn vào nút "detail"
-                console.log("Chi tiết sản phẩm");
-              }}
+              onPress={() => handleDetailProducts(item._id)}
             >
               <Text style={styles.detailButtonText}>Chi tiết sản phẩm</Text>
             </TouchableOpacity>
