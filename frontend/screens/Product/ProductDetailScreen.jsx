@@ -10,7 +10,7 @@ const ProductDetailScreen = ({ route }) => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.1.39:3000/stores/${storeId}/products/${productId}`
+          `http://10.25.82.74:3000/stores/${storeId}/products/${productId}`
         );
         setProduct(response.data);
       } catch (error) {
@@ -33,7 +33,7 @@ const ProductDetailScreen = ({ route }) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: `http://192.168.1.39:3000/api/products/${product._id}/image`,
+          uri: `http://10.25.82.74:3000/api/products/${product._id}/image`,
         }}
         style={styles.productImage}
       />

@@ -14,7 +14,7 @@ const EditUserScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.1.39:3000/api/auth/user/${userId}`)
+      .get(`http://10.25.82.74:3000/api/auth/user/${userId}`)
       .then((response) => {
         setUser(response.data);
       })
@@ -27,7 +27,7 @@ const EditUserScreen = ({ route, navigation }) => {
     const { _id, username, ...updates } = user;
 
     axios
-      .put(`http://192.168.1.39:3000/api/auth/user/${userId}`, updates)
+      .put(`http://10.25.82.74:3000/api/auth/user/${userId}`, updates)
       .then((response) => {
         navigation.goBack();
       })

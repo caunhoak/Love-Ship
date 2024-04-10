@@ -28,7 +28,7 @@ const EditProductScreen = ({ route, navigation }) => {
   const fetchProductDetails = async (productId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.39:3000/api/products/${productId}`
+        `http://10.25.82.74:3000/api/products/${productId}`
       );
       const productData = response.data;
 
@@ -40,7 +40,7 @@ const EditProductScreen = ({ route, navigation }) => {
 
       // Fetch product image
       const responseImage = await axios.get(
-        `http://192.168.1.39:3000/api/products/${productId}/image`,
+        `http://10.25.82.74:3000/api/products/${productId}/image`,
         { responseType: "arraybuffer" }
       );
       const base64Image = Buffer.from(responseImage.data, "binary").toString(
@@ -63,7 +63,7 @@ const EditProductScreen = ({ route, navigation }) => {
       };
 
       const response = await axios.put(
-        `http://192.168.1.39:3000/api/products/${productId}`,
+        `http://10.25.82.74:3000/api/products/${productId}`,
         productData
       );
 

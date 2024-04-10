@@ -46,7 +46,7 @@ const Register = ({ navigation }) => {
       }
 
       const response = await axios.post(
-        "http://192.168.1.39:3000/api/auth/register",
+        "http://10.25.82.74:3000/api/auth/register",
         {
           username: username,
           email: email,

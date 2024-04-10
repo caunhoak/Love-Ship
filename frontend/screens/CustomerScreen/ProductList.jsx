@@ -30,7 +30,7 @@ const ProductListScreen = () => {
   const fetchProducts = async (storeId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.39:3000/stores/${storeId}`
+        `http://10.25.82.74:3000/stores/${storeId}`
       );
       setProducts(response.data.products);
     } catch (error) {
@@ -119,7 +119,7 @@ const ProductListScreen = () => {
           <View style={styles.productItem}>
             <Image
               source={{
-                uri: `http://192.168.1.39:3000/api/products/${item._id}/image`,
+                uri: `http://10.25.82.74:3000/api/products/${item._id}/image`,
               }}
               style={styles.productImage}
             />
