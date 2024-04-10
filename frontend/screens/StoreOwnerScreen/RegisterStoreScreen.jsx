@@ -41,7 +41,7 @@ const RegisterStoreScreen = () => {
       }
 
       const storeResponse = await axios.post(
-        "http://192.168.1.39:3000/api/stores",
+        "http://10.25.82.74:3000/api/stores",
         formData,
         {
           headers: {
@@ -50,7 +50,6 @@ const RegisterStoreScreen = () => {
         }
       );
       const storeId = storeResponse.data._id;
-      console.log(storeResponse.data);
       console.log("StoreId created:", storeId);
       if (storeId) {
         // Lưu userId vào AsyncStorage

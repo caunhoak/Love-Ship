@@ -16,7 +16,7 @@ const AdminScreen = () => {
   useEffect(() => {
     // Gửi yêu cầu API để lấy danh sách người dùng từ backend
     axios
-      .get("http://192.168.1.39:3000/api/auth/user")
+      .get("http://10.25.82.74:3000/api/auth/user")
       .then((response) => {
         setUsers(response.data);
       })
@@ -33,7 +33,7 @@ const AdminScreen = () => {
   const handleDeleteUser = (userId) => {
     // Gửi yêu cầu API để xóa người dùng từ backend
     axios
-      .delete(`http://192.168.1.39:3000/api/auth/user/${userId}`)
+      .delete(`http://10.25.82.74:3000/api/auth/user/${userId}`)
       .then((response) => {
         // Cập nhật danh sách người dùng sau khi xóa thành công
         setUsers(users.filter((user) => user._id !== userId));

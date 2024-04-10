@@ -21,7 +21,7 @@ const ProductManagementScreen = () => {
       const storeId = await AsyncStorage.getItem("storeId");
 
       const response = await axios.get(
-        `http://192.168.1.39:3000/stores/${storeId}`
+        `http://10.25.82.74:3000/stores/${storeId}`
       );
       const { products } = response.data; // Trích xuất danh sách sản phẩm từ response.data
       setProducts(products);
@@ -44,7 +44,7 @@ const ProductManagementScreen = () => {
 
   const handleDeleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://192.168.1.39:3000/api/products/${productId}`);
+      await axios.delete(`http://10.25.82.74:3000/api/products/${productId}`);
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -68,7 +68,7 @@ const ProductManagementScreen = () => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
           source={{
-            uri: `http://192.168.1.39:3000/api/products/${item._id}/image`,
+            uri: `http://10.25.82.74:3000/api/products/${item._id}/image`,
           }}
           style={{ width: 50, height: 50, marginRight: 16 }}
         />

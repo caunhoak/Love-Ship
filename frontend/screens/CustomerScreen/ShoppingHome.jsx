@@ -25,7 +25,7 @@ const HomeScreen = () => {
 
   const fetchStores = async () => {
     try {
-      const response = await axios.get("http://192.168.1.39:3000/api/stores");
+      const response = await axios.get("http://10.25.82.74:3000/api/stores");
       setStores(response.data);
     } catch (error) {
       console.error("Error fetching stores:", error);
@@ -39,7 +39,7 @@ const HomeScreen = () => {
       {item.logo_data && (
         <Image
           source={{
-            uri: `http://192.168.1.39:3000/api/stores/${item._id}/image`,
+            uri: `http://10.25.82.74:3000/api/stores/${item._id}/image`,
           }}
           style={styles.logo}
         />

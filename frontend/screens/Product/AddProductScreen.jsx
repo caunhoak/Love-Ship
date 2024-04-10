@@ -53,7 +53,7 @@ const AddProductScreen = () => {
       });
 
       const response = await axios.post(
-        `http://192.168.1.39:3000/api/products`,
+        `http://10.25.82.74:3000/api/products`,
         formData,
         {
           headers: {
@@ -133,7 +133,7 @@ const AddProductScreen = () => {
       {productImage && (
         <Image
           source={{ uri: productImage }}
-          style={{ width: 200, height: 200 }}
+          style={{ width: 150, height: 100 }}
         />
       )}
 
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    paddingTop: "5%",
   },
   title: {
     fontSize: 20,

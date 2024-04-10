@@ -38,7 +38,7 @@ const Login = ({ navigation }) => {
         return;
       }
       // Tiến hành đăng nhập Google
-      const authUrl = "http://192.168.1.39:3000/auth/google";
+      const authUrl = "http://10.25.82.74:3000/auth/google";
       const response = await WebBrowser.openAuthSessionAsync(authUrl);
       const { type: responseType, url } = response;
       if (responseType === "success") {
@@ -53,7 +53,7 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.39:3000/api/auth/login",
+        "http://10.25.82.74:3000/api/auth/login",
         {
           username: username,
           password: password,
@@ -114,7 +114,7 @@ const Login = ({ navigation }) => {
         if (savedUsername !== null && savedPassword !== null) {
           // Nếu có dữ liệu đăng nhập đã được lưu trữ, chuyển hướng trực tiếp đến trang AccountLogin
           const response = await axios.post(
-            "http://192.168.1.39:3000/api/auth/login",
+            "http://10.25.82.74:3000/api/auth/login",
             {
               username: savedUsername,
               password: savedPassword,
