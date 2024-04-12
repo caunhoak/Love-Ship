@@ -81,7 +81,6 @@ const RegisterStoreScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register Store</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Store Name</Text>
         <TextInput
@@ -138,11 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: "5%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
   inputContainer: {
     marginBottom: 10,

@@ -10,11 +10,12 @@ import ResetPassword from "./screens/Auth/ResetPassword";
 import EditUser from "./screens/Admin/EditUser";
 // import UserManagementScreen from "./screens/UserManagementScreen";
 import ProductList from "./screens/CustomerScreen/ProductList";
-import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen";
+// import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen";
 import EditProductScreen from "./screens/Product/EditProductScreen";
 import AddProductScreen from "./screens/Product/AddProductScreen";
 import StoreOwner from "./screens/StoreOwnerScreen/StoreOwner";
 import ProductDetailScreen from "./screens/Product/ProductDetailScreen";
+import StoreScreen from "./screens/StoreOwnerScreen/StoreScreen";
 
 const Stack = createStackNavigator();
 
@@ -50,9 +51,14 @@ const App = () => {
           component={CustomerScreen}
           options={{ title: "Customer" }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="StoreScreen"
           component={RegisterStoreScreen}
+          options={{ title: "Store" }}
+        /> */}
+        <Stack.Screen
+          name="StoreScreen"
+          component={StoreScreen}
           options={{ title: "Store" }}
         />
         <Stack.Screen
