@@ -12,11 +12,12 @@ import { useNavigation } from "@react-navigation/native"; // Import hook useNavi
 const AdminScreen = () => {
   const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
   const [users, setUsers] = useState([]);
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
 
   useEffect(() => {
     // Gửi yêu cầu API để lấy danh sách người dùng từ backend
     axios
-      .get("http://10.25.82.74:3000/api/auth/user")
+      .get(`${urlLocalHost}/api/auth/user`)
       .then((response) => {
         setUsers(response.data);
       })
@@ -33,7 +34,7 @@ const AdminScreen = () => {
   const handleDeleteUser = (userId) => {
     // Gửi yêu cầu API để xóa người dùng từ backend
     axios
-      .delete(`http://10.25.82.74:3000/api/auth/user/${userId}`)
+      .delete(`${urlLocalHost}/api/auth/user/${userId}`)
       .then((response) => {
         // Cập nhật danh sách người dùng sau khi xóa thành công
         setUsers(users.filter((user) => user._id !== userId));

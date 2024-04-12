@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native"; // Import useNavigatio
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddProductScreen = () => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -53,7 +54,7 @@ const AddProductScreen = () => {
       });
 
       const response = await axios.post(
-        `http://10.25.82.74:3000/api/products`,
+        `${urlLocalHost}/api/products`,
         formData,
         {
           headers: {

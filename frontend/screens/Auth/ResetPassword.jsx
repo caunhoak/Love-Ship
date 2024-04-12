@@ -5,8 +5,8 @@ import styles from "../../components/StyleSheet";
 import AuthButton from "../../components/AuthButton";
 import axios from "axios"; // Import axios for making HTTP requests
 
-const ResetPassword = ({ navigation, route }) => {
-  const { email } = route.params;
+const ResetPassword = ({ navigation }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -20,7 +20,7 @@ const ResetPassword = ({ navigation, route }) => {
     try {
       // Gửi yêu cầu reset mật khẩu
       const response = await axios.post(
-        "http://192.168.126.1:3000/api/auth/reset-password",
+        `${urlLocalHost}/api/auth/reset-password`,
         {
           resetToken,
           newPassword,

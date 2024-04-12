@@ -19,6 +19,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as Network from "expo-network";
 
 const Login = ({ navigation }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +39,10 @@ const Login = ({ navigation }) => {
         return;
       }
       // Tiến hành đăng nhập Google
-      const authUrl = "http://10.25.82.74:3000/auth/google";
-      const response = await WebBrowser.openAuthSessionAsync(authUrl);
+      // const authUrl = "http://10.25.82.74:3000/auth/google";
+      const response = await WebBrowser.openAuthSessionAsync(
+        `${urlLocalHost}/auth/google`
+      );
       const { type: responseType, url } = response;
       if (responseType === "success") {
         // Xử lý phản hồi từ backend sau khi đăng nhập thành công
@@ -52,13 +55,10 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(
-        "http://10.25.82.74:3000/api/auth/login",
-        {
-          username: username,
-          password: password,
-        }
-      );
+      const response = await axios.post(`${urlLocalHost}/api/auth/login`, {
+        username: username,
+        password: password,
+      });
 
       const { redirectScreen, userId } = response.data;
 
@@ -113,13 +113,10 @@ const Login = ({ navigation }) => {
         const savedPassword = await SecureStore.getItemAsync("savedPassword");
         if (savedUsername !== null && savedPassword !== null) {
           // Nếu có dữ liệu đăng nhập đã được lưu trữ, chuyển hướng trực tiếp đến trang AccountLogin
-          const response = await axios.post(
-            "http://10.25.82.74:3000/api/auth/login",
-            {
-              username: savedUsername,
-              password: savedPassword,
-            }
-          );
+          const response = await axios.post(`${urlLocalHost}/api/auth/login`, {
+            username: savedUsername,
+            password: savedPassword,
+          });
           const { redirectScreen } = response.data;
           navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
         }

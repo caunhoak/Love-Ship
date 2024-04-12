@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import axios from "axios";
 
 const ProductDetailScreen = ({ route }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const { storeId, productId } = route.params;
   const [product, setProduct] = useState(null);
 
@@ -10,7 +11,7 @@ const ProductDetailScreen = ({ route }) => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://10.25.82.74:3000/stores/${storeId}/products/${productId}`
+          `${urlLocalHost}/stores/${storeId}/products/${productId}`
         );
         setProduct(response.data);
       } catch (error) {
@@ -33,7 +34,7 @@ const ProductDetailScreen = ({ route }) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: `http://10.25.82.74:3000/api/products/${product._id}/image`,
+          uri: `${urlLocalHost}/api/products/${product._id}/image`,
         }}
         style={styles.productImage}
       />
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    textAlign: "center",
   },
   productImage: {
     width: "100%",

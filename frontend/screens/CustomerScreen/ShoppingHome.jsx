@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native"; // Import hook useNavi
 const HomeScreen = () => {
   const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
   const [searchText, setSearchText] = useState("");
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
 
   const [stores, setStores] = useState([]);
 
@@ -25,7 +26,7 @@ const HomeScreen = () => {
 
   const fetchStores = async () => {
     try {
-      const response = await axios.get("http://10.25.82.74:3000/api/stores");
+      const response = await axios.get(`${urlLocalHost}/api/stores`);
       setStores(response.data);
     } catch (error) {
       console.error("Error fetching stores:", error);
@@ -39,7 +40,7 @@ const HomeScreen = () => {
       {item.logo_data && (
         <Image
           source={{
-            uri: `http://10.25.82.74:3000/api/stores/${item._id}/image`,
+            uri: `${urlLocalHost}/api/stores/${item._id}/image`,
           }}
           style={styles.logo}
         />
