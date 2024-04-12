@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
+const Store = require("../models/Store");
 
 // Function to hash the password before saving to database
 const hashPassword = async (password) => {
@@ -56,6 +57,48 @@ exports.register = async (req, res) => {
   }
 };
 
+// // Controller function to login a user
+// exports.login = async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+
+//     // Find user by username
+//     const user = await User.findOne({ username });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Check password
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+//     if (!passwordMatch) {
+//       return res.status(401).json({ message: "Invalid password" });
+//     }
+
+//     // Return userId along with redirectScreen
+//     let redirectScreen;
+//     switch (user.role) {
+//       case "admin":
+//         redirectScreen = "AdminScreen";
+//         break;
+//       case "store_owner":
+//         redirectScreen = "StoreScreen";
+//         break;
+//       case "customer":
+//         redirectScreen = "CustomerScreen";
+//         break;
+//       default:
+//         redirectScreen = "DefaultScreen";
+//         break;
+//     }
+
+//     // Return userId in addition to redirectScreen
+//     res.json({ redirectScreen, userId: user._id });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 // Controller function to login a user
 exports.login = async (req, res) => {
   try {
@@ -73,25 +116,36 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Return userId along with redirectScreen
-    let redirectScreen;
+    let redirectScreen, extraData;
+
     switch (user.role) {
       case "admin":
         redirectScreen = "AdminScreen";
+        extraData = { userId: user._id };
         break;
       case "store_owner":
+        // Find store by owner_id
+        const store = await Store.findOne({ owner_id: user._id });
+        if (!store) {
+          return res
+            .status(404)
+            .json({ message: "Store not found for this user" });
+        }
         redirectScreen = "StoreScreen";
+        extraData = { userId: user._id, storeId: store._id };
         break;
       case "customer":
         redirectScreen = "CustomerScreen";
+        extraData = { userId: user._id };
         break;
       default:
         redirectScreen = "DefaultScreen";
+        extraData = { userId: user._id };
         break;
     }
 
-    // Return userId in addition to redirectScreen
-    res.json({ redirectScreen, userId: user._id });
+    // Return userId và extraData cho màn hình tiếp theo
+    res.json({ redirectScreen, ...extraData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
