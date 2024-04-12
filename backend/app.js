@@ -160,6 +160,23 @@ app.get("/stores/:storeId", async (req, res) => {
   }
 });
 
+// // Endpoint: Lấy danh sách sản phẩm của Store dựa vào owner_id
+// app.get("/stores/products", async (req, res) => {
+//   const ownerId = req.query.ownerId;
+//   try {
+//     // Find store by owner_id
+//     const store = await Store.findOne({ owner_id: ownerId });
+//     if (!store) return res.status(404).send("Store not found");
+
+//     // Find products by store_id
+//     const products = await Product.find({ store_id: store._id });
+//     res.send(products);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
 // Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
 app.get("/stores/:storeId/products/:productId", async (req, res) => {
   const { storeId, productId } = req.params;
