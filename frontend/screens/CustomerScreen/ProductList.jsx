@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   FlatList,
   Image,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ProductListScreen = () => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [products, setProducts] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
@@ -29,9 +29,7 @@ const ProductListScreen = () => {
 
   const fetchProducts = async (storeId) => {
     try {
-      const response = await axios.get(
-        `http://10.25.82.74:3000/stores/${storeId}`
-      );
+      const response = await axios.get(`${urlLocalHost}/stores/${storeId}`);
       setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -119,7 +117,7 @@ const ProductListScreen = () => {
           <View style={styles.productItem}>
             <Image
               source={{
-                uri: `http://10.25.82.74:3000/api/products/${item._id}/image`,
+                uri: `${urlLocalHost}/api/products/${item._id}/image`,
               }}
               style={styles.productImage}
             />

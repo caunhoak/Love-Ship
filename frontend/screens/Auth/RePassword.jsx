@@ -6,6 +6,7 @@ import AuthButton from "../../components/AuthButton";
 import axios from "axios"; // Import axios for making HTTP requests
 
 const RePassword = ({ navigation }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [email, setEmail] = useState("");
 
   const handleForgotPassword = async () => {
@@ -18,7 +19,7 @@ const RePassword = ({ navigation }) => {
     try {
       // Gửi yêu cầu kiểm tra email có tồn tại hay không
       const response = await axios.post(
-        "http://192.168.126.1:3000/api/auth/request-reset-password",
+        `${urlLocalHost}/api/auth/request-reset-password`,
         { email }
       );
 

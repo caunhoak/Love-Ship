@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   Image,
   Button,
@@ -15,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterStoreScreen = () => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,7 +41,7 @@ const RegisterStoreScreen = () => {
       }
 
       const storeResponse = await axios.post(
-        "http://10.25.82.74:3000/api/stores",
+        `${urlLocalHost}/api/stores`,
         formData,
         {
           headers: {
@@ -81,32 +81,54 @@ const RegisterStoreScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Register Store</Text>
-      <TextInput
-        placeholder="Store Name"
-        value={name}
-        onChangeText={(text) => setName(text)}
-      />
-      <TextInput
-        placeholder="Address"
-        value={address}
-        onChangeText={(text) => setAddress(text)}
-      />
-      <TextInput
-        placeholder="Phone"
-        value={phone}
-        onChangeText={(text) => setPhone(text)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleChooseImage}>
-        <Text style={styles.buttonText}>Choose logo</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Register Store</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Store Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Store Name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Address</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Address"
+          value={address}
+          onChangeText={(text) => setAddress(text)}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Phone</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Phone"
+          value={phone}
+          onChangeText={(text) => setPhone(text)}
+        />
+      </View>
+      <View style={styles.submitButtonContainer}>
+        <Button
+          title="Choose Image"
+          onPress={handleChooseImage}
+          style={styles.button}
+        />
+      </View>
       {logo && (
         <Image
           source={{ uri: logo }}
           style={{ width: 200, height: 200, marginTop: 10 }}
         />
       )}
-      <Button title="Register" onPress={handleRegister} />
+      <View style={styles.submitButtonContainer}>
+        <Button
+          title="Register"
+          onPress={handleRegister}
+          style={styles.button}
+        />
+      </View>
     </View>
   );
 };
@@ -114,23 +136,37 @@ const RegisterStoreScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    paddingTop: "5%",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 10,
+    width: "100%",
+  },
+  label: {
+    marginBottom: 5,
   },
   input: {
     width: "100%",
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 10,
+    borderRadius: 5,
     paddingHorizontal: 10,
   },
+  multilineInput: {
+    height: 80,
+  },
   button: {
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+    marginVertical: 10,
+  },
+  submitButtonContainer: {
+    marginVertical: 10,
   },
   buttonText: {
     color: "white",

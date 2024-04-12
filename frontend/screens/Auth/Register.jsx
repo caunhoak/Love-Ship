@@ -9,6 +9,7 @@ import AuthButton from "../../components/AuthButton";
 import styles from "../../components/StyleSheet";
 
 const Register = ({ navigation }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -45,16 +46,13 @@ const Register = ({ navigation }) => {
         return;
       }
 
-      const response = await axios.post(
-        "http://10.25.82.74:3000/api/auth/register",
-        {
-          username: username,
-          email: email,
-          phone: phone,
-          password: password,
-          role: role,
-        }
-      );
+      const response = await axios.post(`${urlLocalHost}/api/auth/register`, {
+        username: username,
+        email: email,
+        phone: phone,
+        password: password,
+        role: role,
+      });
       console.log(response.data);
       Alert.alert("Success for register"); // Hiển thị thông báo thành công
       navigation.goBack("Login");

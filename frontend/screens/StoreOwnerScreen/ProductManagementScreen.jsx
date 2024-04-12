@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductManagementScreen = () => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,9 +21,7 @@ const ProductManagementScreen = () => {
     try {
       const storeId = await AsyncStorage.getItem("storeId");
 
-      const response = await axios.get(
-        `http://10.25.82.74:3000/stores/${storeId}`
-      );
+      const response = await axios.get(`${urlLocalHost}/stores/${storeId}`);
       const { products } = response.data; // Trích xuất danh sách sản phẩm từ response.data
       setProducts(products);
     } catch (error) {
@@ -44,7 +43,7 @@ const ProductManagementScreen = () => {
 
   const handleDeleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://10.25.82.74:3000/api/products/${productId}`);
+      await axios.delete(`${urlLocalHost}/api/products/${productId}`);
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -68,7 +67,7 @@ const ProductManagementScreen = () => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
           source={{
-            uri: `http://10.25.82.74:3000/api/products/${item._id}/image`,
+            uri: `${urlLocalHost}/api/products/${item._id}/image`,
           }}
           style={{ width: 50, height: 50, marginRight: 16 }}
         />

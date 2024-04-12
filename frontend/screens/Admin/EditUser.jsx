@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
 
 const EditUserScreen = ({ route, navigation }) => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const { userId } = route.params;
   const [user, setUser] = useState({
     _id: "",
@@ -14,7 +15,7 @@ const EditUserScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     axios
-      .get(`http://10.25.82.74:3000/api/auth/user/${userId}`)
+      .get(`${urlLocalHost}/api/auth/user/${userId}`)
       .then((response) => {
         setUser(response.data);
       })
@@ -27,7 +28,7 @@ const EditUserScreen = ({ route, navigation }) => {
     const { _id, username, ...updates } = user;
 
     axios
-      .put(`http://10.25.82.74:3000/api/auth/user/${userId}`, updates)
+      .put(`${urlLocalHost}/api/auth/user/${userId}`, updates)
       .then((response) => {
         navigation.goBack();
       })
