@@ -9,9 +9,8 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ProductManagementScreen = () => {
+const ProductManagementScreen = ({ route }) => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
@@ -19,7 +18,7 @@ const ProductManagementScreen = () => {
 
   const fetchProducts = async () => {
     try {
-      const storeId = await AsyncStorage.getItem("storeId");
+      const { storeId } = route.params;
 
       const response = await axios.get(`${urlLocalHost}/stores/${storeId}`);
       const { products } = response.data; // Trích xuất danh sách sản phẩm từ response.data
@@ -91,6 +90,12 @@ const ProductManagementScreen = () => {
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleAddProduct = () => {
+    navigation.navigate("AddProductScreen", {
+      storeId: route.params.storeId,
+    });
+  };
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <TextInput
@@ -110,7 +115,7 @@ const ProductManagementScreen = () => {
         renderItem={renderProductItem}
         keyExtractor={(item) => item._id}
       />
-      <TouchableOpacity onPress={() => navigation.navigate("AddProductScreen")}>
+      <TouchableOpacity onPress={handleAddProduct}>
         <View
           style={{ backgroundColor: "blue", padding: 16, alignItems: "center" }}
         >

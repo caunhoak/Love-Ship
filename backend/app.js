@@ -160,6 +160,20 @@ app.get("/stores/:storeId", async (req, res) => {
   }
 });
 
+// Endpoint: Lấy thông tin của cửa hàng theo "_id"
+app.get("/store/:storeId", async (req, res) => {
+  const storeId = req.params.storeId;
+  try {
+    const store = await Store.findById(storeId);
+    if (!store) return res.status(404).send("Store not found");
+
+    res.send(store);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // // Endpoint: Lấy danh sách sản phẩm của Store dựa vào owner_id
 // app.get("/stores/products", async (req, res) => {
 //   const ownerId = req.query.ownerId;

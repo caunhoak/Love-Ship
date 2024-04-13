@@ -53,40 +53,6 @@ const Login = ({ navigation }) => {
     }
   };
 
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post(`${urlLocalHost}/api/auth/login`, {
-  //       username: username,
-  //       password: password,
-  //     });
-
-  //     const { redirectScreen, userId } = response.data;
-
-  //     if (userId) {
-  //       // Lưu userId vào AsyncStorage
-  //       await AsyncStorage.setItem("userId", userId);
-
-  //       if (checked) {
-  //         await AsyncStorage.setItem("savedUsername", username);
-  //         await SecureStore.setItemAsync("savedPassword", password);
-  //         await AsyncStorage.setItem("isChecked", "true");
-  //       } else {
-  //         await AsyncStorage.removeItem("savedUsername");
-  //         await SecureStore.deleteItemAsync("savedPassword");
-  //         await AsyncStorage.removeItem("isChecked");
-  //       }
-
-  //       navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
-  //     } else {
-  //       console.error("No userId returned from server");
-  //       Alert.alert("Lỗi đăng nhập", "Không có userId trả về từ máy chủ");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error logging in:", error);
-  //     Alert.alert("Lỗi đăng nhập", "Tên người dùng hoặc mật khẩu không hợp lệ");
-  //   }
-  // };
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${urlLocalHost}/api/auth/login`, {
@@ -110,18 +76,21 @@ const Login = ({ navigation }) => {
           await AsyncStorage.removeItem("isChecked");
         }
 
-        if (redirectScreen === "StoreScreen") {
-          // Nếu là store_owner, lưu cả storeId vào AsyncStorage
+        if (redirectScreen === "ManagementStore") {
+          // Nếu là store_owner, kiểm tra storeId
           if (storeId) {
-            await AsyncStorage.setItem("storeId", storeId);
+            navigation.navigate(redirectScreen, { storeId: storeId });
             console.log("StoreId:", storeId);
           } else {
             console.error("No storeId returned from server");
             Alert.alert("Lỗi đăng nhập", "Không có storeId trả về từ máy chủ");
+            return; // Dừng hàm nếu không có storeId
           }
+        } else if (redirectScreen === "RegisterStoreScreen") {
+          navigation.navigate(redirectScreen);
+        } else {
+          navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
         }
-
-        navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
       } else {
         console.error("No userId returned from server");
         Alert.alert("Lỗi đăng nhập", "Không có userId trả về từ máy chủ");

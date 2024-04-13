@@ -2,8 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import ProductManagementScreen from "./ProductManagementScreen";
+// import ProductManagementScreen from "./ProductManagementScreen";
 import RegisterStoreScreen from "./RegisterStoreScreen";
+import ManagementStore from "../Store/ManagementStore";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +15,7 @@ const StoreScreen = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Quản lý cửa hàng") {
+          if (route.name === "Thông tin cửa hàng") {
             iconName = focused ? "storefront" : "storefront-outline";
           } else if (route.name === "Tạo cửa hàng") {
             iconName = focused ? "add-circle" : "add-circle-outline";
@@ -35,9 +36,14 @@ const StoreScreen = () => {
         component={RegisterStoreScreen}
         options={{ headerTitleAlign: "center" }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Quản lý cửa hàng"
         component={ProductManagementScreen}
+        options={{ headerTitleAlign: "center" }}
+      /> */}
+      <Tab.Screen
+        name="Thông tin cửa hàng"
+        component={ManagementStore}
         options={{ headerTitleAlign: "center" }}
       />
     </Tab.Navigator>
