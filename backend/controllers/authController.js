@@ -57,48 +57,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// // Controller function to login a user
-// exports.login = async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     // Find user by username
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Check password
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-//     if (!passwordMatch) {
-//       return res.status(401).json({ message: "Invalid password" });
-//     }
-
-//     // Return userId along with redirectScreen
-//     let redirectScreen;
-//     switch (user.role) {
-//       case "admin":
-//         redirectScreen = "AdminScreen";
-//         break;
-//       case "store_owner":
-//         redirectScreen = "StoreScreen";
-//         break;
-//       case "customer":
-//         redirectScreen = "CustomerScreen";
-//         break;
-//       default:
-//         redirectScreen = "DefaultScreen";
-//         break;
-//     }
-
-//     // Return userId in addition to redirectScreen
-//     res.json({ redirectScreen, userId: user._id });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 // Controller function to login a user
 exports.login = async (req, res) => {
   try {
@@ -126,13 +84,13 @@ exports.login = async (req, res) => {
       case "store_owner":
         // Find store by owner_id
         const store = await Store.findOne({ owner_id: user._id });
-        if (!store) {
-          return res
-            .status(404)
-            .json({ message: "Store not found for this user" });
+        if (store) {
+          redirectScreen = "ManagementStore";
+          extraData = { userId: user._id, storeId: store._id }; // Assign storeId if store is found
+        } else {
+          redirectScreen = "RegisterStoreScreen";
+          extraData = { userId: user._id }; // No store found, don't assign storeId
         }
-        redirectScreen = "StoreScreen";
-        extraData = { userId: user._id, storeId: store._id };
         break;
       case "customer":
         redirectScreen = "CustomerScreen";
