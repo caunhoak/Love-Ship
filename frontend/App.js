@@ -8,14 +8,15 @@ import AdminScreen from "./screens/Admin/AdminScreen";
 import CustomerScreen from "./screens/CustomerScreen/Customer";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import EditUser from "./screens/Admin/EditUser";
-// import UserManagementScreen from "./screens/UserManagementScreen";
 import ProductList from "./screens/CustomerScreen/ProductList";
-// import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen";
+import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen";
 import EditProductScreen from "./screens/Product/EditProductScreen";
 import AddProductScreen from "./screens/Product/AddProductScreen";
 import StoreOwner from "./screens/StoreOwnerScreen/StoreOwner";
 import ProductDetailScreen from "./screens/Product/ProductDetailScreen";
 import StoreScreen from "./screens/StoreOwnerScreen/StoreScreen";
+import ProductManagementScreen from "./screens/StoreOwnerScreen/ProductManagementScreen";
+import ManagementStore from "./screens/Store/ManagementStore";
 
 const Stack = createStackNavigator();
 
@@ -51,11 +52,11 @@ const App = () => {
           component={CustomerScreen}
           options={{ title: "Customer" }}
         />
-        {/* <Stack.Screen
-          name="StoreScreen"
+        <Stack.Screen
+          name="RegisterStoreScreen"
           component={RegisterStoreScreen}
           options={{ title: "Store" }}
-        /> */}
+        />
         <Stack.Screen
           name="StoreScreen"
           component={StoreScreen}
@@ -94,6 +95,16 @@ const App = () => {
         <Stack.Screen
           name="AddProductScreen"
           component={AddProductScreen}
+          options={{ title: "Store" }}
+        />
+        <Stack.Screen
+          name="ProductManagementScreen"
+          component={ProductManagementScreen}
+          options={{ title: "Store" }}
+        />
+        <Stack.Screen
+          name="ManagementStore"
+          component={ManagementStore}
           options={{ title: "Store" }}
         />
       </Stack.Navigator>

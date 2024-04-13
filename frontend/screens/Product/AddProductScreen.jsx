@@ -10,10 +10,9 @@ import {
 } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-const AddProductScreen = () => {
+const AddProductScreen = ({ route }) => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
@@ -21,7 +20,7 @@ const AddProductScreen = () => {
   const [productDeliveryTime, setProductDeliveryTime] = useState("");
   const [productCompletionTime, setProductCompletionTime] = useState("");
   const [productImage, setProductImage] = useState(null);
-  const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
+  const navigation = useNavigation();
 
   const handleChooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -38,8 +37,8 @@ const AddProductScreen = () => {
 
   const handleSubmit = async () => {
     try {
-      const storeId = await AsyncStorage.getItem("storeId");
-      console.log("Store_id la:", storeId);
+      const { storeId } = route.params;
+
       const formData = new FormData();
       formData.append("name", productName);
       formData.append("store_id", storeId);
@@ -73,8 +72,9 @@ const AddProductScreen = () => {
       setProductCompletionTime("");
       setProductImage(null);
 
-      navigation.navigate("Sản phẩm");
-      // navigation.goBack();
+      navigation.navigate("StoreOwner", {
+        storeId,
+      });
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to add product!");

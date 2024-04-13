@@ -10,7 +10,9 @@ import AccountManagementScreen from "./AccountManagementScreen";
 
 const Tab = createBottomTabNavigator();
 
-const StoreOwner = () => {
+const StoreOwner = ({ route }) => {
+  const { storeId } = route.params;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -42,6 +44,7 @@ const StoreOwner = () => {
       <Tab.Screen
         name="Sản phẩm"
         component={ProductManagementScreen}
+        initialParams={{ storeId }}
         options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
