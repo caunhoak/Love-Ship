@@ -123,8 +123,8 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/order-items", orderItemRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/carts", cartRoutes);
-app.use("/api/cart-items", cartItemRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/cartItem", cartItemRoutes);
 app.use("/api/transactions", paymentRoute);
 app.use("/reviews", reviewRouter);
 
@@ -173,23 +173,6 @@ app.get("/store/:storeId", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-// // Endpoint: Lấy danh sách sản phẩm của Store dựa vào owner_id
-// app.get("/stores/products", async (req, res) => {
-//   const ownerId = req.query.ownerId;
-//   try {
-//     // Find store by owner_id
-//     const store = await Store.findOne({ owner_id: ownerId });
-//     if (!store) return res.status(404).send("Store not found");
-
-//     // Find products by store_id
-//     const products = await Product.find({ store_id: store._id });
-//     res.send(products);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
 
 // Endpoint: Lấy Store theo "_id" và Product tương ứng theo "_id" của nó để xem chi tiết Product đó có những gì
 app.get("/stores/:storeId/products/:productId", async (req, res) => {

@@ -1,18 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const {
-  createCartItem,
-  getAllCartItems,
-  getCartItemById,
-  updateCartItem,
-  deleteCartItem,
-} = require("../controllers/cartItemController");
+const cartItemController = require("../controllers/cartItemController");
 
-router.route("/").post(createCartItem).get(getAllCartItems);
-router
-  .route("/:id")
-  .get(getCartItemById)
-  .put(updateCartItem)
-  .delete(deleteCartItem);
+// Route: POST /cartItem/createItems
+// Description: Create multiple new cart items
+router.post("/createItems", cartItemController.createCartItems);
 
 module.exports = router;
