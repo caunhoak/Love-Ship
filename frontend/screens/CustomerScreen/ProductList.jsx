@@ -18,18 +18,21 @@ const ProductListScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
   const [productQuantities, setProductQuantities] = useState({});
-  const route = useRoute(); // Sử dụng hook useRoute để truy cập vào route
-  const { storeId } = route.params; // Lấy storeId từ route params
-
+  const route = useRoute();
+  const { storeId, userId } = route.params;
   const { goBack, navigate } = useNavigation();
 
-  useEffect(() => {
-    fetchProducts(storeId); // Sử dụng storeId để fetch sản phẩm từ cửa hàng tương ứng
-  }, [storeId]); // Fetch lại sản phẩm khi storeId thay đổi
+  console.log(userId);
 
-  const fetchProducts = async (storeId) => {
+  useEffect(() => {
+    fetchProducts(storeId, userId);
+  }, [storeId, userId]);
+
+  const fetchProducts = async (storeId, userId) => {
     try {
-      const response = await axios.get(`${urlLocalHost}/stores/${storeId}`);
+      const response = await axios.get(`${urlLocalHost}/stores/${storeId}`, {
+        params: { userId },
+      });
       setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -67,24 +70,68 @@ const ProductListScreen = () => {
     updateCartAndQuantities(updatedCart, updatedQuantities);
   };
 
-  const handleCartOrder = () => {
-    console.log("Order");
+  const addToCart = (productId) => {
+    const updatedQuantities = {
+      ...productQuantities,
+      [productId]: (productQuantities[productId] || 0) + 1,
+    };
+    const updatedCart = [
+      ...cart,
+      {
+        _id: productId,
+        quantity: updatedQuantities[productId],
+      },
+    ];
+    updateCartAndQuantities(updatedCart, updatedQuantities);
+  };
+
+  const handleCartOrder = async () => {
+    try {
+      const cartId = await createCart(userId);
+      const items = cart.map((item) => ({
+        productId: item._id,
+        quantity: productQuantities[item._id],
+        total_price: item.price * productQuantities[item._id],
+      }));
+      await createCartItems(cartId, items);
+      navigate("CartScreen", { cartId: cartId });
+    } catch (error) {
+      console.error("Error handling cart order:", error);
+    }
   };
 
   const handleDetailProducts = (productId) => {
-    // Chuyển hướng sang trang chi tiết sản phẩm và truyền storeId và productId
     navigate("ProductDetail", { storeId, productId });
+  };
+
+  const createCart = async (userId) => {
+    try {
+      const response = await axios.post(`${urlLocalHost}/api/cart/create`, {
+        userId,
+      });
+      return response.data.cart._id;
+    } catch (error) {
+      console.error("Error creating cart:", error);
+      throw error;
+    }
+  };
+
+  const createCartItems = async (cartId, items) => {
+    try {
+      await axios.post(`${urlLocalHost}/api/cartItem/createItems`, {
+        cartId,
+        items,
+      });
+    } catch (error) {
+      console.error("Error creating cart items:", error);
+      throw error;
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            /* Xử lý khi nhấn vào icon back */
-            goBack();
-          }}
-        >
+        <TouchableOpacity onPress={goBack}>
           <MaterialIcons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <View style={styles.searchContainer}>
@@ -140,12 +187,15 @@ const ProductListScreen = () => {
             >
               <Text style={styles.detailButtonText}>Chi tiết sản phẩm</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addToCartButton}
+              onPress={() => addToCart(item._id)}
+            >
+              <Text style={styles.addToCartButtonText}>Thêm vào giỏ hàng</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
-      <TouchableOpacity style={styles.button} onPress={handleCartOrder}>
-        <Text style={styles.touchInput}>Đi đến giỏ hàng</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -153,7 +203,7 @@ const ProductListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: "3%",
+    margin: 16,
   },
   header: {
     flexDirection: "row",
@@ -168,8 +218,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
     paddingHorizontal: 10,
-    padding: "3%",
-    margin: "3%",
+    padding: 8,
     flex: 1,
   },
   searchInput: {
@@ -231,6 +280,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   detailButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  addToCartButton: {
+    backgroundColor: "blue",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  addToCartButtonText: {
     color: "white",
     fontWeight: "bold",
   },
