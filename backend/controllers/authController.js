@@ -65,13 +65,13 @@ exports.login = async (req, res) => {
     // Find user by username
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.json({ message: "User not found" });
     }
 
     // Check password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.json({ message: "Invalid password" });
     }
 
     let redirectScreen, extraData;

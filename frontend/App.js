@@ -17,6 +17,7 @@ import ProductDetailScreen from "./screens/Product/ProductDetailScreen";
 import StoreScreen from "./screens/StoreOwnerScreen/StoreScreen";
 import ProductManagementScreen from "./screens/StoreOwnerScreen/ProductManagementScreen";
 import ManagementStore from "./screens/Store/ManagementStore";
+import UpdateStore from "./screens/Store/UpdateStore";
 
 const Stack = createStackNavigator();
 
@@ -27,86 +28,29 @@ const App = () => {
         initialRouteName="Start"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ title: "Đăng nhập" }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ title: "Đăng ký" }}
-        />
-        <Stack.Screen
-          name="ForgotPassword"
-          component={ForgotPasswordScreen}
-          options={{ title: "Quên mật khẩu" }}
-        />
-        <Stack.Screen
-          name="AdminScreen"
-          component={AdminScreen}
-          options={{ title: "Admin" }}
-        />
-        <Stack.Screen
-          name="CustomerScreen"
-          component={CustomerScreen}
-          options={{ title: "Customer" }}
-        />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        <Stack.Screen name="AdminScreen" component={AdminScreen} />
+        <Stack.Screen name="CustomerScreen" component={CustomerScreen} />
         <Stack.Screen
           name="RegisterStoreScreen"
           component={RegisterStoreScreen}
-          options={{ title: "Store" }}
         />
-        <Stack.Screen
-          name="StoreScreen"
-          component={StoreScreen}
-          options={{ title: "Store" }}
-        />
-        <Stack.Screen
-          name="StoreOwner"
-          component={StoreOwner}
-          options={{ title: "Store" }}
-        />
-        <Stack.Screen
-          name="ResetPassword"
-          component={ResetPassword}
-          options={{ title: "Lấy lại mật khẩu" }}
-        />
-        <Stack.Screen
-          name="EditUser"
-          component={EditUser}
-          options={{ title: "Khách hàng" }}
-        />
-        <Stack.Screen
-          name="ProductList"
-          component={ProductList}
-          options={{ title: "Store" }}
-        />
-        <Stack.Screen
-          name="ProductDetail"
-          component={ProductDetailScreen}
-          options={{ title: "Chi Tiết sản phẩm" }}
-        />
-        <Stack.Screen
-          name="EditProductScreen"
-          component={EditProductScreen}
-          options={{ title: "Store" }}
-        />
-        <Stack.Screen
-          name="AddProductScreen"
-          component={AddProductScreen}
-          options={{ title: "Store" }}
-        />
+        <Stack.Screen name="StoreScreen" component={StoreScreen} />
+        <Stack.Screen name="StoreOwner" component={StoreOwner} />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
+        <Stack.Screen name="EditUser" component={EditUser} />
+        <Stack.Screen name="ProductList" component={ProductList} />
+        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+        <Stack.Screen name="EditProductScreen" component={EditProductScreen} />
+        <Stack.Screen name="AddProductScreen" component={AddProductScreen} />
         <Stack.Screen
           name="ProductManagementScreen"
           component={ProductManagementScreen}
-          options={{ title: "Store" }}
         />
-        <Stack.Screen
-          name="ManagementStore"
-          component={ManagementStore}
-          options={{ title: "Store" }}
-        />
+        <Stack.Screen name="ManagementStore" component={ManagementStore} />
+        <Stack.Screen name="UpdateStore" component={UpdateStore} />
       </Stack.Navigator>
     </NavigationContainer>
   );
