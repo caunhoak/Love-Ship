@@ -75,11 +75,12 @@ exports.updateStore = async (req, res) => {
 exports.deleteStore = async (req, res) => {
   try {
     const store = await Store.findById(req.params.id);
+    console.log("deleting store: ", store.name);
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    await store.remove();
+    await Store.deleteOne({ _id: req.params.id });
     res.json({ message: "Store deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
