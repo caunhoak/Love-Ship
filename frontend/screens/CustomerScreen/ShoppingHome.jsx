@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native"; // Import hook useNavigation
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
   const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
@@ -56,9 +57,19 @@ const HomeScreen = () => {
     </View>
   );
 
-  const handleStore = (storeId) => {
-    // Nhận storeId như một tham số
-    navigation.navigate("ProductList", { storeId }); // Chuyển hướng và truyền storeId
+  const handleStore = async (storeId) => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      if (userId) {
+        navigation.navigate("ProductList", { storeId, userId });
+      } else {
+        console.error("No userId found in AsyncStorage");
+        // Xử lý khi không tìm thấy userId
+      }
+    } catch (error) {
+      console.error("Error getting userId from AsyncStorage:", error);
+      // Xử lý lỗi khi không thể lấy userId từ AsyncStorage
+    }
   };
 
   return (

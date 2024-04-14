@@ -18,6 +18,7 @@ import StoreScreen from "./screens/StoreOwnerScreen/StoreScreen";
 import ProductManagementScreen from "./screens/StoreOwnerScreen/ProductManagementScreen";
 import ManagementStore from "./screens/Store/ManagementStore";
 import UpdateStore from "./screens/Store/UpdateStore";
+import CartScreen from "./screens/Cart/CartScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,7 @@ const App = () => {
         />
         <Stack.Screen name="ManagementStore" component={ManagementStore} />
         <Stack.Screen name="UpdateStore" component={UpdateStore} />
+        <Stack.Screen name="CartScreen" component={CartScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
