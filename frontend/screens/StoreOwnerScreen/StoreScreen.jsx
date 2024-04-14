@@ -2,7 +2,6 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// import ProductManagementScreen from "./ProductManagementScreen";
 import RegisterStoreScreen from "./RegisterStoreScreen";
 import ManagementStore from "../Store/ManagementStore";
 
@@ -31,21 +30,8 @@ const StoreScreen = () => {
         },
       })}
     >
-      <Tab.Screen
-        name="Tạo cửa hàng"
-        component={RegisterStoreScreen}
-        options={{ headerTitleAlign: "center" }}
-      />
-      {/* <Tab.Screen
-        name="Quản lý cửa hàng"
-        component={ProductManagementScreen}
-        options={{ headerTitleAlign: "center" }}
-      /> */}
-      <Tab.Screen
-        name="Thông tin cửa hàng"
-        component={ManagementStore}
-        options={{ headerTitleAlign: "center" }}
-      />
+      <Tab.Screen name="Tạo cửa hàng" component={RegisterStoreScreen} />
+      <Tab.Screen name="Thông tin cửa hàng" component={ManagementStore} />
     </Tab.Navigator>
   );
 };

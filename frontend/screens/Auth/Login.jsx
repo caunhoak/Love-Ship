@@ -54,6 +54,10 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert("Lỗi đăng nhập", "Vui lòng nhập tên người dùng và mật khẩu");
+      return;
+    }
     try {
       const response = await axios.post(`${urlLocalHost}/api/auth/login`, {
         username: username,
@@ -92,11 +96,9 @@ const Login = ({ navigation }) => {
           navigation.navigate(redirectScreen); // Navigate to the screen received from the backend
         }
       } else {
-        console.error("No userId returned from server");
-        Alert.alert("Lỗi đăng nhập", "Không có userId trả về từ máy chủ");
+        Alert.alert("Lỗi đăng nhập", "Tài khoản hoặc mật khẩu không chính xác");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
       Alert.alert("Lỗi đăng nhập", "Tên người dùng hoặc mật khẩu không hợp lệ");
     }
   };
