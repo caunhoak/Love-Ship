@@ -1,94 +1,60 @@
 const CartItem = require("../models/CartItem");
 const Product = require("../models/Product");
 
-// Controller để tạo một cart item mới
-exports.createCartItem = async (req, res) => {
+// Controller to create cart items
+exports.createCartItems = async (req, res) => {
   try {
-    const { cart_id, product_id, quantity } = req.body;
+    const { cartId, items } = req.body;
 
-    // Kiểm tra xem cart_id và product_id có tồn tại không
-    const cartExists = await Cart.exists({ _id: cart_id });
-    const productExists = await Product.exists({ _id: product_id });
-
-    if (!cartExists) {
-      return res.status(404).json({ success: false, error: "Cart not found" });
-    }
-
-    if (!productExists) {
+    // Check if cartId and items exist in request body
+    if (!cartId || !items || !Array.isArray(items) || items.length === 0) {
       return res
-        .status(404)
-        .json({ success: false, error: "Product not found" });
+        .status(400)
+        .json({
+          message: "Missing required parameters or items array is empty",
+        });
     }
 
-    // Tiếp tục tạo cart item nếu cả hai id đều hợp lệ
-    const newCartItem = new CartItem({
-      cart_id,
-      product_id,
-      quantity,
-    });
+    const cartItems = [];
+    let totalPriceForAllItems = 0; // Initialize total price for all items
 
-    await newCartItem.save();
+    // Loop through each item in the items array
+    for (const item of items) {
+      const { productId, quantity } = item;
 
-    res.status(201).json({ success: true, data: newCartItem });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
+      // Find the product to get its price
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ message: `Product with ID ${productId} not found` });
+      }
 
-// Controller để lấy tất cả các cart items
-exports.getAllCartItems = async (req, res) => {
-  try {
-    const cartItems = await CartItem.find();
-    res.status(200).json({ success: true, data: cartItems });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
+      // Calculate total price based on product price and quantity
+      const totalPrice = product.price * quantity;
 
-// Controller để lấy một cart item bằng id
-exports.getCartItemById = async (req, res) => {
-  try {
-    const cartItem = await CartItem.findById(req.params.id);
-    if (!cartItem) {
-      return res
-        .status(404)
-        .json({ success: false, error: "CartItem not found" });
+      // Create a new CartItem
+      const cartItem = await CartItem.create({
+        cart_id: cartId,
+        product_id: productId,
+        quantity: quantity,
+        total_price: totalPrice,
+      });
+
+      cartItems.push(cartItem);
+      totalPriceForAllItems += totalPrice; // Add total price of current item to total price for all items
     }
-    res.status(200).json({ success: true, data: cartItem });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
 
-// Controller để cập nhật thông tin của một cart item
-exports.updateCartItem = async (req, res) => {
-  try {
-    const cartItem = await CartItem.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!cartItem) {
-      return res
-        .status(404)
-        .json({ success: false, error: "CartItem not found" });
-    }
-    res.status(200).json({ success: true, data: cartItem });
+    // Add totalPriceForAllItems to the response
+    res
+      .status(201)
+      .json({
+        message: "Cart items created successfully",
+        cartItems: cartItems,
+        totalPriceForAllItems: totalPriceForAllItems,
+      });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// Controller để xóa một cart item
-exports.deleteCartItem = async (req, res) => {
-  try {
-    const cartItem = await CartItem.findByIdAndDelete(req.params.id);
-    if (!cartItem) {
-      return res
-        .status(404)
-        .json({ success: false, error: "CartItem not found" });
-    }
-    res.status(200).json({ success: true, data: {} });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
