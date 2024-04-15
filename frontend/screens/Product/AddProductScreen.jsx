@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: "5%",
+    // paddingTop: "5%",
+    margin: "5%",
   },
   title: {
     fontSize: 20,

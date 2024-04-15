@@ -16,7 +16,7 @@ const Customer = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Home") {
+          if (route.name === "Shopping Home") {
             iconName = focused ? "restaurant" : "restaurant-outline";
           } else if (route.name === "Orders") {
             iconName = focused ? "receipt" : "receipt-outline";
@@ -37,9 +37,10 @@ const Customer = () => {
       })}
     >
       <Tab.Screen
-        name="Home"
+        name="Shopping Home"
         component={ShoppingHome}
-        options={{ headerShown: false }} // Ẩn thanh header cho màn hình Home
+        // options={{ headerShown: false }} // Ẩn thanh header cho màn hình Home
+        options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
         name="Orders"
