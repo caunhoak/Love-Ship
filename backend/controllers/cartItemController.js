@@ -76,12 +76,10 @@ exports.getCartItems = async (req, res) => {
     }
 
     // If cart items found, return them in the response along with total price for all items
-    res
-      .status(200)
-      .json({
-        cartItems: cartItems,
-        totalPriceForAllItems: totalPriceForAllItems,
-      });
+    res.status(200).json({
+      cartItems: cartItems,
+      totalPriceForAllItems: totalPriceForAllItems,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

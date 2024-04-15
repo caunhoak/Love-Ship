@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,8 +22,6 @@ const ProductListScreen = () => {
   const route = useRoute();
   const { storeId, userId } = route.params;
   const { goBack, navigate } = useNavigation();
-
-  console.log(userId);
 
   useEffect(() => {
     fetchProducts(storeId, userId);
@@ -44,19 +43,6 @@ const ProductListScreen = () => {
     setProductQuantities(updatedQuantities);
   };
 
-  const increaseQuantity = (productId) => {
-    const updatedQuantities = {
-      ...productQuantities,
-      [productId]: (productQuantities[productId] || 0) + 1,
-    };
-    const updatedCart = cart.map((item) =>
-      item._id === productId
-        ? { ...item, quantity: updatedQuantities[productId] }
-        : item
-    );
-    updateCartAndQuantities(updatedCart, updatedQuantities);
-  };
-
   const decreaseQuantity = (productId) => {
     const updatedQuantities = {
       ...productQuantities,
@@ -71,18 +57,31 @@ const ProductListScreen = () => {
   };
 
   const addToCart = (productId) => {
-    const updatedQuantities = {
-      ...productQuantities,
-      [productId]: (productQuantities[productId] || 0) + 1,
-    };
-    const updatedCart = [
-      ...cart,
-      {
-        _id: productId,
-        quantity: updatedQuantities[productId],
-      },
-    ];
-    updateCartAndQuantities(updatedCart, updatedQuantities);
+    if (cart.find((item) => item._id === productId)) {
+      // Product already exists in cart, update quantity
+      const updatedCart = cart.map((item) =>
+        item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      setCart(updatedCart);
+      setProductQuantities({
+        ...productQuantities,
+        [productId]: (productQuantities[productId] || 0) + 1,
+      });
+    } else {
+      // Product does not exist in cart, add to cart
+      const updatedCart = [
+        ...cart,
+        {
+          _id: productId,
+          quantity: 1,
+        },
+      ];
+      setCart(updatedCart);
+      setProductQuantities({
+        ...productQuantities,
+        [productId]: 1,
+      });
+    }
   };
 
   const handleCartOrder = async () => {
@@ -123,8 +122,10 @@ const ProductListScreen = () => {
         items,
       });
     } catch (error) {
-      console.error("Error creating cart items:", error);
-      throw error;
+      // console.error("Error creating cart items:", error);
+      // throw error;
+
+      Alert.alert("Bạn chưa thêm sản phẩm nào vào giỏ!!!");
     }
   };
 
@@ -176,7 +177,7 @@ const ProductListScreen = () => {
                   <MaterialIcons name="remove" size={24} color="black" />
                 </TouchableOpacity>
                 <Text>{productQuantities[item._id] || 0}</Text>
-                <TouchableOpacity onPress={() => increaseQuantity(item._id)}>
+                <TouchableOpacity onPress={() => addToCart(item._id)}>
                   <MaterialIcons name="add" size={24} color="black" />
                 </TouchableOpacity>
               </View>
@@ -185,17 +186,18 @@ const ProductListScreen = () => {
               style={styles.detailButton}
               onPress={() => handleDetailProducts(item._id)}
             >
-              <Text style={styles.detailButtonText}>Chi tiết sản phẩm</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.addToCartButton}
-              onPress={() => addToCart(item._id)}
-            >
-              <Text style={styles.addToCartButtonText}>Thêm vào giỏ hàng</Text>
+              <Text style={styles.detailButtonText}>Chi tiết</Text>
             </TouchableOpacity>
           </View>
         )}
       />
+
+      <TouchableOpacity
+        style={styles.CartButton}
+        onPress={() => handleCartOrder()}
+      >
+        <Text style={styles.CartButtonText}>Xem giỏ hàng</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -284,13 +286,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  addToCartButton: {
+  CartButton: {
     backgroundColor: "blue",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
   },
-  addToCartButtonText: {
+  CartButtonText: {
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
   },
