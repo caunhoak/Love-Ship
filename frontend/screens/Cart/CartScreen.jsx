@@ -33,7 +33,7 @@ const CartScreen = ({ route }) => {
 
       setCartItems(items);
     } catch (error) {
-      console.error("Error fetching cart items:", error);
+      // console.error("Error fetching cart items:", error);
     }
   };
 
@@ -67,9 +67,11 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   title: {
+    textAlign: "center",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+    marginTop: 16,
   },
   cartItem: {
     borderWidth: 1,
