@@ -8,7 +8,7 @@ import AdminScreen from "./screens/Admin/AdminScreen";
 import CustomerScreen from "./screens/CustomerScreen/Customer";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import EditUser from "./screens/Admin/EditUser";
-import ProductList from "./screens/CustomerScreen/ProductList";
+import ProductList from "./screens/Product/ProductList";
 import RegisterStoreScreen from "./screens/StoreOwnerScreen/RegisterStoreScreen";
 import EditProductScreen from "./screens/Product/EditProductScreen";
 import AddProductScreen from "./screens/Product/AddProductScreen";

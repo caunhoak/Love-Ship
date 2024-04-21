@@ -86,7 +86,7 @@ const ProductListScreen = () => {
 
   const handleCartOrder = async () => {
     try {
-      const cartId = await createCart(userId);
+      const cartId = await createCart(userId, storeId);
       const items = cart.map((item) => ({
         productId: item._id,
         quantity: productQuantities[item._id],
@@ -107,6 +107,7 @@ const ProductListScreen = () => {
     try {
       const response = await axios.post(`${urlLocalHost}/api/cart/create`, {
         userId,
+        storeId,
       });
       return response.data.cart._id;
     } catch (error) {
