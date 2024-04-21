@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -21,6 +22,7 @@ const ProductListScreen = () => {
   const [productQuantities, setProductQuantities] = useState({});
   const route = useRoute();
   const { storeId, userId } = route.params;
+  const { setCartId } = useContext(CartContext);
   const { goBack, navigate } = useNavigation();
 
   useEffect(() => {
@@ -87,13 +89,15 @@ const ProductListScreen = () => {
   const handleCartOrder = async () => {
     try {
       const cartId = await createCart(userId, storeId);
+      setCartId(cartId); // Save cartId to context
       const items = cart.map((item) => ({
         productId: item._id,
         quantity: productQuantities[item._id],
         total_price: item.price * productQuantities[item._id],
       }));
       await createCartItems(cartId, items);
-      navigate("CartScreen", { cartId: cartId });
+      // navigate("CartScreen", { cartId: cartId });
+      navigate("CartScreen");
     } catch (error) {
       console.error("Error handling cart order:", error);
     }

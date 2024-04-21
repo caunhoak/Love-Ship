@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -11,12 +12,12 @@ import {
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native"; // Import hook useNavigation
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
   const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
   const [searchText, setSearchText] = useState("");
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
+  const { userId } = useContext(CartContext);
 
   const [stores, setStores] = useState([]);
 
@@ -59,7 +60,6 @@ const HomeScreen = () => {
 
   const handleStore = async (storeId) => {
     try {
-      const userId = await AsyncStorage.getItem("userId");
       if (userId) {
         navigation.navigate("ProductList", { storeId, userId });
       } else {
