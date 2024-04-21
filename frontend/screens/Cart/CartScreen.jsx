@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -8,10 +9,10 @@ import {
 } from "react-native";
 import axios from "axios";
 
-const CartScreen = ({ route }) => {
+const CartScreen = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceForAllItems, setTotalPriceForAllItems] = useState(0); // Initialize total price for all items
-  const { cartId } = route.params;
+  const { cartId } = useContext(CartContext);
 
   useEffect(() => {
     fetchCartItems(cartId);
@@ -55,7 +56,7 @@ const CartScreen = ({ route }) => {
         <Text style={styles.totalPrice}>Tổng giá: {totalPriceForAllItems}</Text>
       )}
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Thanh toán</Text>
+        <Text style={styles.buttonText}>Đặt hàng</Text>
       </TouchableOpacity>
     </View>
   );

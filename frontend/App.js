@@ -1,4 +1,5 @@
 import React from "react";
+import { CartProvider } from "./api/CartContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Auth/Login";
@@ -25,35 +26,43 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Start"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="AdminScreen" component={AdminScreen} />
-        <Stack.Screen name="CustomerScreen" component={CustomerScreen} />
-        <Stack.Screen
-          name="RegisterStoreScreen"
-          component={RegisterStoreScreen}
-        />
-        <Stack.Screen name="StoreScreen" component={StoreScreen} />
-        <Stack.Screen name="StoreOwner" component={StoreOwner} />
-        <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="EditUser" component={EditUser} />
-        <Stack.Screen name="ProductList" component={ProductList} />
-        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
-        <Stack.Screen name="EditProductScreen" component={EditProductScreen} />
-        <Stack.Screen name="AddProductScreen" component={AddProductScreen} />
-        <Stack.Screen
-          name="ProductManagementScreen"
-          component={ProductManagementScreen}
-        />
-        <Stack.Screen name="ManagementStore" component={ManagementStore} />
-        <Stack.Screen name="UpdateStore" component={UpdateStore} />
-        <Stack.Screen name="CartScreen" component={CartScreen} />
-      </Stack.Navigator>
+      <CartProvider>
+        <Stack.Navigator
+          initialRouteName="Start"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+          <Stack.Screen name="AdminScreen" component={AdminScreen} />
+          <Stack.Screen name="CustomerScreen" component={CustomerScreen} />
+          <Stack.Screen
+            name="RegisterStoreScreen"
+            component={RegisterStoreScreen}
+          />
+          <Stack.Screen name="StoreScreen" component={StoreScreen} />
+          <Stack.Screen name="StoreOwner" component={StoreOwner} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
+          <Stack.Screen name="EditUser" component={EditUser} />
+          <Stack.Screen name="ProductList" component={ProductList} />
+          <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+          <Stack.Screen
+            name="EditProductScreen"
+            component={EditProductScreen}
+          />
+          <Stack.Screen name="AddProductScreen" component={AddProductScreen} />
+          <Stack.Screen
+            name="ProductManagementScreen"
+            component={ProductManagementScreen}
+          />
+          <Stack.Screen name="ManagementStore" component={ManagementStore} />
+          <Stack.Screen name="UpdateStore" component={UpdateStore} />
+          <Stack.Screen name="CartScreen" component={CartScreen} />
+        </Stack.Navigator>
+      </CartProvider>
     </NavigationContainer>
   );
 };
