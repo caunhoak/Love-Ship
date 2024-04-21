@@ -10,7 +10,6 @@ const session = require("express-session");
 const authRoutes = require("./routes/authRoutes");
 const storeRoutes = require("./routes/storeRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-const orderItemRoutes = require("./routes/orderItemRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const cartItemRoutes = require("./routes/cartItemRoutes");
@@ -120,8 +119,7 @@ app.use(express.json());
 // Sử dụng các route đã được định nghĩa
 app.use("/api/auth", authRoutes);
 app.use("/api/stores", storeRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/order-items", orderItemRoutes);
+app.use("/api/order", orderRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/cartItem", cartItemRoutes);

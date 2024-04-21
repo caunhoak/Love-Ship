@@ -2,25 +2,20 @@ const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
 
-// Route để lấy tất cả các đơn hàng
-router.get("/", orderController.getAllOrders);
+// Route: POST api/order/create
+// Description: Create a new order
+router.post("/create", orderController.createOrder);
 
-// Route để tạo mới một đơn hàng
-router.post("/", orderController.createOrder);
+// Route: PUT api/order/updateStatus
+// Description: Update order status
+router.put("/updateStatus", orderController.updateOrderStatus);
 
-// Route để lấy thông tin của một đơn hàng dựa trên ID
-router.get("/:id", orderController.getOrderById);
+// Route: GET api/order/store/:storeId
+// Description: Get orders by store_id
+router.get("/store/:storeId", orderController.getOrdersByStoreId);
 
-// Route để xác nhận một đơn hàng
-router.patch("/:id/confirm", orderController.confirmOrder);
-
-// Route để đánh dấu đơn hàng là đang vận chuyển
-router.patch("/:id/ship", orderController.shipOrder);
-
-// Route để đánh dấu đơn hàng là đã hoàn thành
-router.patch("/:id/complete", orderController.completeOrder);
-
-// Route để hủy một đơn hàng
-router.patch("/:id/cancel", orderController.cancelOrder);
+// Route: GET api/order/user/:userId
+// Description: Get orders by user_id
+router.get("/user/:userId", orderController.getOrdersByUserId);
 
 module.exports = router;
