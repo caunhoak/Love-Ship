@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -20,10 +21,12 @@ const RegisterStoreScreen = () => {
   const [phone, setPhone] = useState("");
   const [logo, setLogo] = useState(null);
   const navigation = useNavigation();
+  const { userId } = useContext(CartContext);
 
   const handleRegister = async () => {
     try {
-      const owner_id = await AsyncStorage.getItem("userId");
+      const owner_id = userId;
+
       console.log("owner_id:", owner_id);
 
       const formData = new FormData();

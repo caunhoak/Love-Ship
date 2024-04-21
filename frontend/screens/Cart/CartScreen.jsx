@@ -6,13 +6,18 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  Alert,
 } from "react-native";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CartScreen = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceForAllItems, setTotalPriceForAllItems] = useState(0); // Initialize total price for all items
-  const { cartId } = useContext(CartContext);
+  const { cartId, userId } = useContext(CartContext);
+  const { goBack, navigate } = useNavigation();
 
   useEffect(() => {
     fetchCartItems(cartId);
@@ -38,6 +43,24 @@ const CartScreen = () => {
     }
   };
 
+  const handleOrder = async () => {
+    try {
+      await axios.post(
+        `${process.env.EXPO_PUBLIC_LOCALHOST}/api/order/create`,
+        {
+          cartId: cartId,
+          userId: userId,
+        }
+      );
+
+      Alert.alert("Đặt hàng thành công!");
+      goBack();
+      // Reset cart or navigate to order details page
+    } catch (error) {
+      // Handle error
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Giỏ hàng</Text>
@@ -55,7 +78,7 @@ const CartScreen = () => {
       {totalPriceForAllItems !== 0 && (
         <Text style={styles.totalPrice}>Tổng giá: {totalPriceForAllItems}</Text>
       )}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleOrder}>
         <Text style={styles.buttonText}>Đặt hàng</Text>
       </TouchableOpacity>
     </View>

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 import ShoppingHome from "./ShoppingHome";
-import OrdersScreen from "../Order/OrdersScreen";
+import OrderCustomerScreen from "../Order/OrderCustomerScreen";
 import ChatScreen from "../Chat/ChatScreen";
 import AccountScreen from "../Account/AccountScreen";
 
@@ -44,7 +44,7 @@ const Customer = () => {
       />
       <Tab.Screen
         name="Orders"
-        component={OrdersScreen}
+        component={OrderCustomerScreen}
         options={{ headerShown: false }} // Ẩn thanh header cho màn hình Orders
       />
       <Tab.Screen

@@ -1,5 +1,6 @@
 // export default LoginScreen;
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -20,6 +21,7 @@ import * as Network from "expo-network";
 
 const Login = ({ navigation }) => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
+  const { setUserId } = useContext(CartContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -67,8 +69,8 @@ const Login = ({ navigation }) => {
       const { redirectScreen, userId, storeId } = response.data;
 
       if (userId) {
-        // Lưu userId vào AsyncStorage
-        await AsyncStorage.setItem("userId", userId);
+        // Lưu userId vào CartContext
+        setUserId(userId);
 
         if (checked) {
           await AsyncStorage.setItem("savedUsername", username);
