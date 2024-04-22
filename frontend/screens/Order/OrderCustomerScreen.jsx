@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import { CartContext } from "../../api/CartContext";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
 
 const OrderCustomerScreen = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const { userId } = useContext(CartContext);
-  console.log(userId);
 
   const fetchOrdersByUserId = async () => {
     try {
@@ -21,8 +29,11 @@ const OrderCustomerScreen = () => {
       });
 
       setOrders(sortedOrders);
+      setLoading(false); // Hide loading indicator
+      setFilteredOrders(sortedOrders); // Initialize filtered orders
     } catch (error) {
       // Handle error
+      setLoading(false); // Hide loading indicator
     }
   };
 
@@ -37,8 +48,29 @@ const OrderCustomerScreen = () => {
     }, [])
   );
 
+  const filterOrders = (status) => {
+    if (status === "Other") {
+      setFilteredOrders(orders);
+    } else {
+      const filtered = orders.filter((order) => order.status === status);
+      setFilteredOrders(filtered);
+    }
+  };
+
   const renderOrderItem = ({ item }) => (
-    <View style={styles.orderItem}>
+    <View
+      style={[
+        styles.orderItem,
+        {
+          backgroundColor:
+            item.status === "Pending"
+              ? "#C1E1C1"
+              : item.status === "Canceled"
+              ? "#FFC0CB"
+              : "#FFFFFF",
+        },
+      ]}
+    >
       <Text style={styles.orderId}>Mã đơn hàng: {item._id}</Text>
       <Text style={styles.orderDate}>Ngày đặt hàng: {item.created_at}</Text>
       <Text style={styles.orderPrice}>Tổng tiền: {item.total_price}</Text>
@@ -46,14 +78,48 @@ const OrderCustomerScreen = () => {
     </View>
   );
 
+  const renderLegend = () => (
+    <View style={styles.legendContainer}>
+      <TouchableOpacity
+        style={styles.legendItem}
+        onPress={() => filterOrders("Pending")}
+      >
+        <View style={[styles.legendColor, { backgroundColor: "#C1E1C1" }]} />
+        <Text style={styles.legendText}>Pending</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.legendItem}
+        onPress={() => filterOrders("Canceled")}
+      >
+        <View style={[styles.legendColor, { backgroundColor: "#FFC0CB" }]} />
+        <Text style={styles.legendText}>Canceled</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.legendItem}
+        onPress={() => filterOrders("Other")}
+      >
+        <View style={[styles.legendColor, { backgroundColor: "#FFFFFF" }]} />
+        <Text style={styles.legendText}>Other</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Danh sách đơn hàng</Text>
-      <FlatList
-        data={orders}
-        keyExtractor={(item) => item._id}
-        renderItem={renderOrderItem}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0069d9" /> // Show loading indicator
+      ) : orders.length === 0 ? (
+        <Text style={styles.orderNotFound}>Order not found</Text>
+      ) : (
+        <>
+          {renderLegend()}
+          <FlatList
+            data={filteredOrders}
+            keyExtractor={(item) => item._id}
+            renderItem={renderOrderItem}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -63,10 +129,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  title: {
-    fontSize: 20,
+  orderNotFound: {
+    textAlign: "center",
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 16,
   },
   orderItem: {
     marginBottom: 16,
@@ -86,6 +152,24 @@ const styles = StyleSheet.create({
   },
   orderStatus: {
     marginTop: 8,
+  },
+  legendContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 10,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  legendColor: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 5,
+  },
+  legendText: {
+    fontSize: 16,
   },
 });
 

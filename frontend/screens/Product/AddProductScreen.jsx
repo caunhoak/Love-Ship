@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import {
   View,
   Text,
@@ -21,6 +22,7 @@ const AddProductScreen = ({ route }) => {
   const [productCompletionTime, setProductCompletionTime] = useState("");
   const [productImage, setProductImage] = useState(null);
   const navigation = useNavigation();
+  const { storeId } = useContext(CartContext);
 
   const handleChooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -37,8 +39,6 @@ const AddProductScreen = ({ route }) => {
 
   const handleSubmit = async () => {
     try {
-      const { storeId } = route.params;
-
       const formData = new FormData();
       formData.append("name", productName);
       formData.append("store_id", storeId);

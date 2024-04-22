@@ -21,7 +21,7 @@ import * as Network from "expo-network";
 
 const Login = ({ navigation }) => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
-  const { setUserId } = useContext(CartContext);
+  const { setUserId, setStoreId } = useContext(CartContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -85,8 +85,10 @@ const Login = ({ navigation }) => {
         if (redirectScreen === "ManagementStore") {
           // Nếu là store_owner, kiểm tra storeId
           if (storeId) {
-            navigation.navigate(redirectScreen, { storeId: storeId });
-            console.log("StoreId:", storeId);
+            setStoreId(storeId);
+            navigation.navigate(redirectScreen);
+
+            // navigation.navigate(redirectScreen, { storeId: storeId });
           } else {
             console.error("No storeId returned from server");
             Alert.alert("Lỗi đăng nhập", "Không có storeId trả về từ máy chủ");

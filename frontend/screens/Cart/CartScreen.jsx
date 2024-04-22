@@ -11,13 +11,11 @@ import {
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const CartScreen = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceForAllItems, setTotalPriceForAllItems] = useState(0); // Initialize total price for all items
   const { cartId, userId } = useContext(CartContext);
-  const { goBack, navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   useEffect(() => {
     fetchCartItems(cartId);

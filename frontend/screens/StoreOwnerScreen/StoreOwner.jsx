@@ -10,8 +10,8 @@ import AccountManagementScreen from "./AccountManagementScreen";
 
 const Tab = createBottomTabNavigator();
 
-const StoreOwner = ({ route }) => {
-  const { storeId } = route.params;
+const StoreOwner = () => {
+  // const { storeId } = route.params;
 
   return (
     <Tab.Navigator
@@ -44,28 +44,28 @@ const StoreOwner = ({ route }) => {
       <Tab.Screen
         name="Sản phẩm"
         component={ProductManagementScreen}
-        initialParams={{ storeId }}
+        // initialParams={{ storeId }}
         options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
         name="Quản lý Đơn hàng"
         component={OrderManagementScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
         name="Thống kê"
         component={StatisticsScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
         name="Trò chuyện"
         component={ChatScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
         name="Quản lý Tài khoản"
         component={AccountManagementScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitleAlign: "center" }}
       />
     </Tab.Navigator>
   );

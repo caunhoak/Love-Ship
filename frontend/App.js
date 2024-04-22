@@ -20,6 +20,7 @@ import ProductManagementScreen from "./screens/StoreOwnerScreen/ProductManagemen
 import ManagementStore from "./screens/Store/ManagementStore";
 import UpdateStore from "./screens/Store/UpdateStore";
 import CartScreen from "./screens/Cart/CartScreen";
+import UpdateOrderStatus from "./screens/Order/UpdateOrderStatus";
 
 const Stack = createStackNavigator();
 
@@ -61,6 +62,10 @@ const App = () => {
           <Stack.Screen name="ManagementStore" component={ManagementStore} />
           <Stack.Screen name="UpdateStore" component={UpdateStore} />
           <Stack.Screen name="CartScreen" component={CartScreen} />
+          <Stack.Screen
+            name="UpdateOrderStatus"
+            component={UpdateOrderStatus}
+          />
         </Stack.Navigator>
       </CartProvider>
     </NavigationContainer>
