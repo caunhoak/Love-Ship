@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -20,6 +21,7 @@ const ProductListScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
   const [productQuantities, setProductQuantities] = useState({});
+  const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { storeId, userId } = route.params;
   const { setCartId } = useContext(CartContext);
@@ -35,6 +37,7 @@ const ProductListScreen = () => {
         params: { userId },
       });
       setProducts(response.data.products);
+      setLoading(false); // Mark data as loaded
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -60,7 +63,6 @@ const ProductListScreen = () => {
 
   const addToCart = (productId) => {
     if (cart.find((item) => item._id === productId)) {
-      // Product already exists in cart, update quantity
       const updatedCart = cart.map((item) =>
         item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
       );
@@ -70,7 +72,6 @@ const ProductListScreen = () => {
         [productId]: (productQuantities[productId] || 0) + 1,
       });
     } else {
-      // Product does not exist in cart, add to cart
       const updatedCart = [
         ...cart,
         {
@@ -88,15 +89,14 @@ const ProductListScreen = () => {
 
   const handleCartOrder = async () => {
     try {
-      const cartId = await createCart(userId, storeId);
-      setCartId(cartId); // Save cartId to context
+      const cartId = await createCart(userId);
+      setCartId(cartId);
       const items = cart.map((item) => ({
         productId: item._id,
         quantity: productQuantities[item._id],
         total_price: item.price * productQuantities[item._id],
       }));
       await createCartItems(cartId, items);
-      // navigate("CartScreen", { cartId: cartId });
       navigate("CartScreen");
     } catch (error) {
       console.error("Error handling cart order:", error);
@@ -127,9 +127,6 @@ const ProductListScreen = () => {
         items,
       });
     } catch (error) {
-      // console.error("Error creating cart items:", error);
-      // throw error;
-
       Alert.alert("Bạn chưa thêm sản phẩm nào vào giỏ!!!");
     }
   };
@@ -161,47 +158,50 @@ const ProductListScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={products.filter((product) =>
-          product.name.toLowerCase().includes(searchText.toLowerCase())
-        )}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.productItem}>
-            <Image
-              source={{
-                uri: `${urlLocalHost}/api/products/${item._id}/image`,
-              }}
-              style={styles.productImage}
-            />
-            <View style={styles.productDetails}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productPrice}>Giá: {item.price}</Text>
-              <View style={styles.quantityButtons}>
-                <TouchableOpacity onPress={() => decreaseQuantity(item._id)}>
-                  <MaterialIcons name="remove" size={24} color="black" />
-                </TouchableOpacity>
-                <Text>{productQuantities[item._id] || 0}</Text>
-                <TouchableOpacity onPress={() => addToCart(item._id)}>
-                  <MaterialIcons name="add" size={24} color="black" />
-                </TouchableOpacity>
+      {loading ? ( // Check if data is still loading
+        <ActivityIndicator size="large" color="#0000ff" /> // Show loading indicator
+      ) : (
+        <FlatList
+          data={products.filter((product) =>
+            product.name.toLowerCase().includes(searchText.toLowerCase())
+          )}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <View style={styles.productItem}>
+              <Image
+                source={{
+                  uri: `${urlLocalHost}/api/products/${item._id}/image`,
+                }}
+                style={styles.productImage}
+              />
+              <View style={styles.productDetails}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>Giá: {item.price}</Text>
+                <View style={styles.quantityButtons}>
+                  <TouchableOpacity onPress={() => decreaseQuantity(item._id)}>
+                    <MaterialIcons name="remove" size={24} color="black" />
+                  </TouchableOpacity>
+                  <Text>{productQuantities[item._id] || 0}</Text>
+                  <TouchableOpacity onPress={() => addToCart(item._id)}>
+                    <MaterialIcons name="add" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
               </View>
+              <TouchableOpacity
+                style={styles.detailButton}
+                onPress={() => handleDetailProducts(item._id)}
+              >
+                <Text style={styles.detailButtonText}>Chi tiết</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.detailButton}
-              onPress={() => handleDetailProducts(item._id)}
-            >
-              <Text style={styles.detailButtonText}>Chi tiết</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
-
+          )}
+        />
+      )}
       <TouchableOpacity
-        style={styles.CartButton}
+        style={styles.cartButton}
         onPress={() => handleCartOrder()}
       >
-        <Text style={styles.CartButtonText}>Xem giỏ hàng</Text>
+        <Text style={styles.cartButtonText}>Xem giỏ hàng</Text>
       </TouchableOpacity>
     </View>
   );
@@ -267,15 +267,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
-  button: {
-    backgroundColor: "#0069d9",
-    padding: 10,
-    borderRadius: 10,
-  },
-  touchInput: {
-    textAlign: "center",
-    color: "white",
-  },
   quantityButtons: {
     flexDirection: "row",
     alignItems: "center",
@@ -291,13 +282,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  CartButton: {
+  cartButton: {
     backgroundColor: "blue",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
   },
-  CartButtonText: {
+  cartButtonText: {
     textAlign: "center",
     color: "white",
     fontWeight: "bold",

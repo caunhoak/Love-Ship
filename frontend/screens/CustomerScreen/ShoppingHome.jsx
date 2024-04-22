@@ -8,36 +8,41 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native"; // Import hook useNavigation
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
-  const navigation = useNavigation(); // Sử dụng hook useNavigation để truy cập vào navigation
+  const navigation = useNavigation();
   const [searchText, setSearchText] = useState("");
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const { userId } = useContext(CartContext);
-
   const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(false); // State to indicate loading
 
-  // Lấy danh sách cửa hàng từ backend
   useEffect(() => {
     fetchStores();
   }, []);
 
   const fetchStores = async () => {
+    setLoading(true); // Set loading to true when fetching data
     try {
       const response = await axios.get(`${urlLocalHost}/api/stores`);
       setStores(response.data);
     } catch (error) {
       console.error("Error fetching stores:", error);
+    } finally {
+      setLoading(false); // Set loading to false when data fetching is complete
     }
   };
 
-  // Render một mục cửa hàng
   const renderStoreItem = ({ item }) => (
-    <View style={styles.storeContainer}>
+    <TouchableOpacity
+      style={styles.storeContainer}
+      onPress={() => handleStore(item._id)}
+    >
       <Text style={styles.storeName}>{item.name}</Text>
       {item.logo_data && (
         <Image
@@ -49,13 +54,10 @@ const HomeScreen = () => {
       )}
       <Text style={styles.storeInfo}>{item.address}</Text>
       <Text style={styles.storeInfo}>{item.phone}</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleStore(item._id)} // Truyền storeId vào hàm handleStore
-      >
-        <Text style={styles.touchInput}>Xem cửa hàng</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>Xem cửa hàng</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   const handleStore = async (storeId) => {
@@ -64,11 +66,11 @@ const HomeScreen = () => {
         navigation.navigate("ProductList", { storeId, userId });
       } else {
         console.error("No userId found in AsyncStorage");
-        // Xử lý khi không tìm thấy userId
+        // Handle no userId found
       }
     } catch (error) {
       console.error("Error getting userId from AsyncStorage:", error);
-      // Xử lý lỗi khi không thể lấy userId từ AsyncStorage
+      // Handle error getting userId
     }
   };
 
@@ -85,14 +87,18 @@ const HomeScreen = () => {
           <MaterialIcons name="search" size={24} color="black" />
         </View>
       </View>
-      <FlatList
-        data={stores.filter((store) =>
-          store.name.toLowerCase().includes(searchText.toLowerCase())
-        )}
-        renderItem={renderStoreItem}
-        keyExtractor={(item) => item._id.toString()}
-        contentContainerStyle={styles.storeList}
-      />
+      {loading ? ( // Display loading indicator if loading is true
+        <ActivityIndicator size="large" color="#1e90ff" />
+      ) : (
+        <FlatList
+          data={stores.filter((store) =>
+            store.name.toLowerCase().includes(searchText.toLowerCase())
+          )}
+          renderItem={renderStoreItem}
+          keyExtractor={(item) => item._id.toString()}
+          contentContainerStyle={styles.storeList}
+        />
+      )}
     </View>
   );
 };
@@ -100,7 +106,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: "3%",
+    padding: 10,
   },
   header: {
     flexDirection: "row",
@@ -115,46 +121,44 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
     paddingHorizontal: 10,
-    padding: "3%",
-    margin: "3%",
-    flex: 1,
   },
   searchInput: {
     flex: 1,
+    padding: 10,
   },
   storeList: {
-    paddingBottom: "3%",
+    paddingBottom: 10,
   },
   storeContainer: {
-    marginBottom: "3%",
+    marginBottom: 10,
     backgroundColor: "#f0f0f0",
-    padding: "3%",
     borderRadius: 10,
+    padding: 10,
   },
   storeName: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: "2%",
+    marginBottom: 5,
     textAlign: "center",
   },
   logo: {
     width: "100%",
     height: 200,
-    resizeMode: "cover",
     borderRadius: 10,
   },
   storeInfo: {
-    marginBottom: "1%",
+    marginBottom: 5,
     textAlign: "center",
   },
-  button: {
+  buttonContainer: {
     backgroundColor: "#0069d9",
     padding: 10,
     borderRadius: 10,
   },
-  touchInput: {
+  buttonText: {
     textAlign: "center",
     color: "white",
+    fontWeight: "bold",
   },
 });
 

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
 import axios from "axios";
 
 const ProductDetailScreen = ({ route }) => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const { storeId, productId } = route.params;
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -14,6 +15,7 @@ const ProductDetailScreen = ({ route }) => {
           `${urlLocalHost}/stores/${storeId}/products/${productId}`
         );
         setProduct(response.data);
+        setLoading(false); // Mark data as loaded
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -22,10 +24,10 @@ const ProductDetailScreen = ({ route }) => {
     fetchProduct();
   }, [storeId, productId]);
 
-  if (!product) {
+  if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
@@ -41,7 +43,6 @@ const ProductDetailScreen = ({ route }) => {
       <Text style={styles.productName}>{product.name}</Text>
       <Text style={styles.productPrice}>Price: {product.price}</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
-      {/* Add more product details here */}
     </View>
   );
 };
@@ -50,27 +51,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    textAlign: "center",
+    alignItems: "center",
+    padding: 20,
   },
   productImage: {
     width: "100%",
     height: "50%",
     marginBottom: 10,
+    resizeMode: "cover",
   },
   productName: {
-    textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },
   productPrice: {
-    textAlign: "center",
     fontSize: 18,
     marginBottom: 10,
   },
   productDescription: {
-    textAlign: "center",
     fontSize: 16,
+    textAlign: "center",
   },
 });
 
