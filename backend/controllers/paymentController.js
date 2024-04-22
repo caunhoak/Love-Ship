@@ -1,85 +1,179 @@
-const Transaction = require("../models/Payment");
+const Payment = require("../models/Payment");
+const Order = require("../models/Order");
+const paypal = require("paypal-rest-sdk");
 
-// Tạo mới một thanh toán
-exports.createPayment = async (req, res) => {
-  const { user_id, order_id, amount, payment_method } = req.body;
+// Configure PayPal
+paypal.configure({
+  mode: "sandbox", // sandbox or live
+  client_id:
+    "ATrF7HSNuSyCMNblW2m0Zc2PJb3anBAcIDBkrI_6NG8Q3nPGGItE9z-HZTpYkQBB79TpQvn0IiB-zqVF",
+  client_secret:
+    "EMdGGhmpqRbVw6GE2Y5aVmm-QcuRIKewl0SBX54I13gdVxVSNkFg2b20B0q10U70Rygb9fncw-OPLfsi",
+});
 
+// // Controller to create a PayPal payment
+// exports.createPaypalPayment = async (req, res) => {
+//   try {
+//     const { orderId, userId } = req.body;
+
+//     // Find the order by ID to get the total price
+//     const order = await Order.findById(orderId);
+//     if (!order) {
+//       return res.status(404).json({ message: "Order not found" });
+//     }
+
+//     const amount = order.total_price;
+//     const description = "Payment for order #" + orderId;
+
+//     // Create a PayPal payment
+//     const payment = {
+//       intent: "sale",
+//       payer: {
+//         payment_method: "paypal",
+//       },
+//       redirect_urls: {
+//         return_url: "http://192.168.1.39:3000/success",
+//         cancel_url: "http://192.168.1.39:3000/cancel",
+//       },
+//       transactions: [
+//         {
+//           amount: {
+//             total: amount.toFixed(2),
+//             currency: "USD",
+//           },
+//           description: description,
+//         },
+//       ],
+//     };
+
+//     paypal.payment.create(payment, (error, payment) => {
+//       if (error) {
+//         console.error(error);
+//         return res
+//           .status(500)
+//           .json({ message: "Error creating PayPal payment" });
+//       } else {
+//         // Save the payment details in the database
+//         const newPayment = new Payment({
+//           order_id: orderId,
+//           user_id: userId,
+//           amount: amount,
+//           status: "pending", // Payment status initially set to pending
+//           payment_method: "PayPal",
+//           paypal_payment_id: payment.id,
+//         });
+//         newPayment.save();
+
+//         // Redirect the user to PayPal approval_url
+//         const approvalUrl = payment.links.find(
+//           (link) => link.rel === "approval_url"
+//         ).href;
+//         res.redirect(approvalUrl);
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+// Controller to create a PayPal payment
+exports.createPaypalPayment = async (req, res) => {
   try {
-    const payment = new Payment({
-      user_id,
-      order_id,
-      amount,
-      payment_method,
-      status: "Pending", // Mặc định trạng thái là "Pending"
-      created_at: new Date(),
+    const { orderId, userId } = req.body;
+
+    // Find the order by ID to get the total price
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const amount = order.total_price;
+    const description = "Payment for order #" + orderId;
+
+    // Save the payment details in the database
+    const newPayment = new Payment({
+      order_id: orderId,
+      user_id: userId,
+      amount: amount,
+      status: "pending", // Payment status initially set to pending
+      payment_method: "PayPal",
+    });
+    await newPayment.save();
+
+    // Create a PayPal payment
+    const paypalPayment = {
+      intent: "sale",
+      payer: {
+        payment_method: "paypal",
+      },
+      redirect_urls: {
+        return_url: "http://192.168.1.39:3000/api/payment/success",
+        cancel_url: "http://192.168.1.39:3000/api/payment/failed",
+      },
+      transactions: [
+        {
+          amount: {
+            total: amount.toFixed(2),
+            currency: "USD",
+          },
+          description: description,
+        },
+      ],
+    };
+
+    // Send the request to PayPal
+    const payment = await new Promise((resolve, reject) => {
+      paypal.payment.create(paypalPayment, (error, payment) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(payment);
+        }
+      });
     });
 
-    const newPayment = await payment.save();
-    res.status(201).json(newPayment);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    // Update the payment with PayPal ID
+    newPayment.paypal_payment_id = payment.id;
+    await newPayment.save();
+
+    // Redirect the user to PayPal approval_url
+    const approvalUrl = payment.links.find(
+      (link) => link.rel === "approval_url"
+    ).href;
+    res.json({ approvalUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Lấy tất cả các thanh toán
-exports.getAllPayments = async (req, res) => {
+// Controller to handle PayPal payment execution
+exports.executePaypalPayment = async (req, res) => {
   try {
-    const payments = await Payment.find();
-    res.json(payments);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    const { paymentId, PayerID } = req.query;
 
-// Lấy thông tin của một thanh toán dựa trên ID
-exports.getPaymentById = async (req, res) => {
-  try {
-    const payment = await Payment.findById(req.params.id);
-    if (!payment) {
-      return res.status(404).json({ message: "Thanh toán không tồn tại" });
-    }
-    res.json(payment);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    paypal.payment.execute(
+      paymentId,
+      { payer_id: PayerID },
+      async (error, payment) => {
+        if (error) {
+          console.error(error);
+          return res.redirect("http://192.168.1.39:3000/api/payment/failed");
+        } else {
+          // Update payment status in the database
+          await Payment.findOneAndUpdate(
+            { paypal_payment_id: paymentId },
+            { status: "success" }
+          );
 
-// Xử lý khi thanh toán thành công
-exports.successPayment = async (req, res) => {
-  const { paymentId } = req.params;
-
-  try {
-    const payment = await Payment.findById(paymentId);
-    if (!payment) {
-      return res.status(404).json({ message: "Thanh toán không tồn tại" });
-    }
-
-    // Cập nhật trạng thái thanh toán thành "Success"
-    payment.status = "Success";
-    const updatedPayment = await payment.save();
-
-    res.json(updatedPayment);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Xử lý khi thanh toán thất bại
-exports.failedPayment = async (req, res) => {
-  const { paymentId } = req.params;
-
-  try {
-    const payment = await Payment.findById(paymentId);
-    if (!payment) {
-      return res.status(404).json({ message: "Thanh toán không tồn tại" });
-    }
-
-    // Cập nhật trạng thái thanh toán thành "Failed"
-    payment.status = "Failed";
-    const updatedPayment = await payment.save();
-
-    res.json(updatedPayment);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+          // Redirect the user to a success page
+          res.redirect("http://192.168.1.39:3000/api/payment/success");
+        }
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

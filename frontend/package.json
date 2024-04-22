@@ -21,7 +21,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "antd-mobile": "^5.35.0",
     "axios": "^1.6.8",
-    "expo": "~50.0.15",
+    "expo": "~50.0.17",
     "expo-auth-session": "~5.4.0",
     "expo-image-picker": "~14.7.1",
     "expo-network": "~5.8.0",
@@ -38,6 +38,7 @@
     "react-native-reanimated": "^3.6.2",
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "^3.29.0",
+    "react-paypal-button-v2": "^2.6.3",
     "typescript": "^5.3.0"
   },
   "devDependencies": {

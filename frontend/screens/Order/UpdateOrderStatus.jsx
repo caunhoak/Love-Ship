@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CartContext } from "../../api/CartContext";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const UpdateOrderStatus = ({ route }) => {
+const UpdateOrderStatus = () => {
   const [status, setStatus] = useState("");
-  const { orderId } = route.params;
+  const { orderId } = useContext(CartContext);
+
+  // const { orderId } = route.params;
   const { goBack } = useNavigation();
 
   const handleUpdateStatus = async () => {
