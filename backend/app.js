@@ -123,7 +123,7 @@ app.use("/api/order", orderRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/cartItem", cartItemRoutes);
-app.use("/api/transactions", paymentRoute);
+app.use("/api/payment", paymentRoute);
 app.use("/reviews", reviewRouter);
 
 // Endpoint: Lấy tất cả danh sách các Store và danh sách các Product tương ứng với mỗi Store
