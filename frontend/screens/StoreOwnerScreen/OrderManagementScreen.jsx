@@ -16,7 +16,7 @@ const OrderManagementScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const { storeId } = useContext(CartContext);
+  const { storeId, setOrderId } = useContext(CartContext);
   const { navigate } = useNavigation();
 
   const fetchOrdersByStoreId = async () => {
@@ -57,7 +57,8 @@ const OrderManagementScreen = () => {
     }
   };
   const handleOrderPress = (orderId) => {
-    navigate("UpdateOrderStatus", { orderId: orderId });
+    setOrderId(orderId);
+    navigate("UpdateOrderStatus");
   };
 
   const renderOrderItem = ({ item }) => (

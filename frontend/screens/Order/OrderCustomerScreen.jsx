@@ -10,12 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const OrderCustomerScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const { userId } = useContext(CartContext);
+  const { userId, setOrderId } = useContext(CartContext);
+  const { navigate } = useNavigation();
 
   const fetchOrdersByUserId = async () => {
     try {
@@ -57,8 +59,14 @@ const OrderCustomerScreen = () => {
     }
   };
 
+  const handleOrderPress = (orderId) => {
+    setOrderId(orderId);
+    navigate("PaymentScreen");
+  };
+
   const renderOrderItem = ({ item }) => (
-    <View
+    <TouchableOpacity
+      onPress={() => handleOrderPress(item._id)}
       style={[
         styles.orderItem,
         {
@@ -75,7 +83,7 @@ const OrderCustomerScreen = () => {
       <Text style={styles.orderDate}>Ngày đặt hàng: {item.created_at}</Text>
       <Text style={styles.orderPrice}>Tổng tiền: {item.total_price}</Text>
       <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderLegend = () => (
