@@ -1,21 +1,47 @@
 const Chat = require("../models/Chat");
+const Order = require("../models/Order");
 
-// Xử lý và lưu trữ tin nhắn vào cơ sở dữ liệu
-async function saveMessage(sender_id, receiver_id, message) {
+exports.createChat = async (req, res) => {
   try {
-    const chatMessage = new Chat({
-      sender_id,
-      receiver_id,
+    // Get orderId from request body
+    const { orderId, message } = req.body;
+
+    // Find the order by orderId to get userId and storeId
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Extract userId and storeId from the order
+    const { user_id, store_id } = order;
+
+    // Create a new chat with extracted userId, storeId, and orderId
+    const newChat = new Chat({
+      user_id,
+      store_id,
+      order_id: orderId,
       message,
     });
 
-    await chatMessage.save();
-    return chatMessage;
-  } catch (error) {
-    throw error;
-  }
-}
+    // Save the new chat
+    const savedChat = await newChat.save();
 
-module.exports = {
-  saveMessage,
+    // Return the saved chat
+    res.json(savedChat);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.findChatByOrderId = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const chat = await Chat.findOne({ order_id: orderId });
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found for this order" });
+    }
+    res.json(chat);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

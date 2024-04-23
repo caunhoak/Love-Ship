@@ -1,22 +1,35 @@
 const socketIO = require("socket.io");
+const Chat = require("../models/Chat");
 
-function initializeSocketServer(server) {
-  const io = socketIO(server);
+const initSocketServer = (httpServer) => {
+  const io = socketIO(httpServer);
 
   io.on("connection", (socket) => {
-    console.log("New client connected");
+    console.log("A user connected");
 
-    // Xử lý sự kiện khi client gửi tin nhắn
-    socket.on("sendMessage", (messageData) => {
-      // Xử lý và lưu trữ tin nhắn vào cơ sở dữ liệu
-      // ...
+    socket.on("sendMessage", async (data) => {
+      try {
+        // Lưu tin nhắn vào cơ sở dữ liệu
+        const { userId, storeId, orderId, message } = data;
+        const newChat = new Chat({
+          user_id: userId,
+          store_id: storeId,
+          order_id: orderId,
+          message,
+        });
+        const savedChat = await newChat.save();
 
-      // Gửi tin nhắn đến các clients khác
-      io.emit("newMessage", messageData);
+        // Gửi tin nhắn tới tất cả các clients đang kết nối
+        io.emit("newMessage", savedChat);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
-    // Xử lý các sự kiện khác nếu cần
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
+    });
   });
-}
+};
 
-module.exports = initializeSocketServer;
+module.exports = initSocketServer;
