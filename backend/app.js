@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const initializeSocketServer = require("./sockets/socketServer");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -13,14 +15,19 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const cartItemRoutes = require("./routes/cartItemRoutes");
-const paymentRoute = require("./routes/paymentRoute");
-const reviewRouter = require("./routes/reviewRoute");
+const paymentRoute = require("./routes/paymentRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 //import models
 const Store = require("./models/Store");
 const Product = require("./models/Product");
 
 const app = express();
+const server = http.createServer(app);
+
+// Khởi tạo và cấu hình Socket.IO server
+initializeSocketServer(server);
 
 // Sử dụng express-session
 app.use(
@@ -125,6 +132,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/cartItem", cartItemRoutes);
 app.use("/api/payment", paymentRoute);
 app.use("/reviews", reviewRouter);
+app.use("/api/chat", chatRoutes);
 
 // Endpoint: Lấy tất cả danh sách các Store và danh sách các Product tương ứng với mỗi Store
 app.get("/stores", async (req, res) => {

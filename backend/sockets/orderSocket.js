@@ -1,1 +1,0 @@
-// Socket để thực hiện giao tiếp real-time giữa cặp đôi yêu nhau và người quản lý cửa hàng
