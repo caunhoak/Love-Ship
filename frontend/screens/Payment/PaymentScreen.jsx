@@ -2,18 +2,19 @@ import React, { useState, useContext } from "react";
 import {
   View,
   Text,
-  Button,
+  TouchableOpacity,
   ActivityIndicator,
   Alert,
+  StyleSheet,
   Linking,
 } from "react-native";
 import axios from "axios";
 import { CartContext } from "../../api/CartContext";
 
 const PaymentScreen = () => {
+  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
   const [loading, setLoading] = useState(false);
   const { orderId, userId } = useContext(CartContext);
-  const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST; // Thay YOUR_BACKEND_URL bằng URL của backend của bạn
 
   const createPaypalPayment = async () => {
     setLoading(true);
@@ -37,16 +38,50 @@ const PaymentScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ marginBottom: 20 }}>Payment Screen</Text>
-      <Button
-        title="Pay with PayPal"
+    <View style={styles.container}>
+      <Text style={styles.title}>Payment Screen</Text>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          { backgroundColor: loading ? "#ccc" : "#007bff" },
+        ]}
         onPress={createPaypalPayment}
         disabled={loading}
-      />
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Processing..." : "Pay with PayPal"}
+        </Text>
+      </TouchableOpacity>
       {loading && <ActivityIndicator style={{ marginTop: 20 }} />}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  button: {
+    width: "80%",
+    backgroundColor: "#007bff",
+    paddingVertical: 15,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 
 export default PaymentScreen;
