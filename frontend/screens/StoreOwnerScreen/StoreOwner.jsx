@@ -6,7 +6,8 @@ import ProductManagementScreen from "./ProductManagementScreen";
 import OrderManagementScreen from "./OrderManagementScreen";
 import StatisticsScreen from "./StatisticsScreen";
 import ChatScreen from "./ChatScreen";
-import AccountManagementScreen from "./AccountManagementScreen";
+// import AccountManagementScreen from "./AccountManagementScreen";
+import AccountScreen from "../Account/AccountScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +65,7 @@ const StoreOwner = () => {
       />
       <Tab.Screen
         name="Quản lý Tài khoản"
-        component={AccountManagementScreen}
+        component={AccountScreen}
         options={{ headerTitleAlign: "center" }}
       />
     </Tab.Navigator>
