@@ -58,7 +58,8 @@ const OrderManagementScreen = () => {
   };
   const handleOrderPress = (orderId) => {
     setOrderId(orderId);
-    navigate("UpdateOrderStatus");
+    // navigate("UpdateOrderStatus");
+    navigate("ChatScreen");
   };
 
   const renderOrderItem = ({ item }) => (

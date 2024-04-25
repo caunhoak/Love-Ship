@@ -16,7 +16,7 @@ const OrderCustomerScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const { userId, setOrderId } = useContext(CartContext);
+  const { userId, setOrderId, setStoreId } = useContext(CartContext);
   const { navigate } = useNavigation();
 
   const fetchOrdersByUserId = async () => {
@@ -61,7 +61,10 @@ const OrderCustomerScreen = () => {
 
   const handleOrderPress = (orderId) => {
     setOrderId(orderId);
-    navigate("PaymentScreen");
+    // navigate("PaymentScreen");
+
+    setStoreId(orders.find((order) => order._id === orderId).store_id);
+    navigate("ChatScreen");
   };
 
   const renderOrderItem = ({ item }) => (
@@ -83,6 +86,7 @@ const OrderCustomerScreen = () => {
       <Text style={styles.orderDate}>Ngày đặt hàng: {item.created_at}</Text>
       <Text style={styles.orderPrice}>Tổng tiền: {item.total_price}</Text>
       <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
+      <Text style={styles.orderStatus}>Trạng thái: {item.store_id}</Text>
     </TouchableOpacity>
   );
 

@@ -47,11 +47,11 @@ const Customer = () => {
         component={OrderCustomerScreen}
         options={{ headerTitleAlign: "center" }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Chat"
         component={ChatScreen}
         options={{ headerShown: false }} // Ẩn thanh header cho màn hình Chat
-      />
+      /> */}
       <Tab.Screen
         name="Account"
         component={AccountScreen}
