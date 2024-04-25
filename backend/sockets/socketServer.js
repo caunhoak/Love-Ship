@@ -1,15 +1,27 @@
 const socketIO = require("socket.io");
 const Chat = require("../models/Chat");
+const Store = require("../models/Store");
+const User = require("../models/User");
 
-// Hàm xử lý lưu trữ tin nhắn chat vào cơ sở dữ liệu
 const saveChat = async (userId, storeId, orderId, message) => {
   try {
+    // Lấy tên cửa hàng từ storeId
+    const store = await Store.findById(storeId);
+    const storeName = store ? store.name : "";
+
+    // Lấy tên người dùng từ userId
+    const user = await User.findById(userId);
+    const username = user ? user.username : "";
+
     const newChat = new Chat({
       user_id: userId,
       store_id: storeId,
       order_id: orderId,
       message,
+      store_name: storeName,
+      username: username,
     });
+
     const savedChat = await newChat.save();
     return savedChat;
   } catch (error) {
@@ -17,7 +29,6 @@ const saveChat = async (userId, storeId, orderId, message) => {
   }
 };
 
-// Hàm khởi tạo và cấu hình Socket.IO server
 const initSocketServer = (httpServer) => {
   const io = socketIO(httpServer);
 
@@ -26,11 +37,9 @@ const initSocketServer = (httpServer) => {
 
     socket.on("sendMessage", async (data) => {
       try {
-        // Lưu tin nhắn vào cơ sở dữ liệu
         const { userId, storeId, orderId, message } = data;
         const savedChat = await saveChat(userId, storeId, orderId, message);
 
-        // Gửi tin nhắn mới cho tất cả các clients đang kết nối
         io.emit("newMessage", savedChat);
       } catch (error) {
         console.error(error);
