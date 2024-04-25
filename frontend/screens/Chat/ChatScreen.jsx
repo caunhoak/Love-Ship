@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { CartContext } from "../../api/CartContext";
 import { Text, View, TextInput, Button, FlatList } from "react-native";
 import io from "socket.io-client";
+import axios from "axios";
 
 const SERVER_URL = "http://192.168.1.39:3000"; // Đổi lại URL của server của bạn
 
@@ -13,6 +14,7 @@ const ChatScreen = () => {
 
   useEffect(() => {
     socket.on("newMessage", handleNewMessage);
+    fetchChatMessages(); // Gọi hàm để lấy dữ liệu chat khi component được mount
 
     return () => {
       socket.off("newMessage", handleNewMessage);
@@ -27,6 +29,15 @@ const ChatScreen = () => {
     if (message.trim() !== "") {
       socket.emit("sendMessage", { userId, storeId, orderId, message });
       setMessage(""); // Xóa nội dung tin nhắn ở ô nhập
+    }
+  };
+
+  const fetchChatMessages = async () => {
+    try {
+      const response = await axios.get(`${SERVER_URL}/api/chat/${orderId}`);
+      setMessages(response.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
