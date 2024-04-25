@@ -20,6 +20,7 @@ const reviewRouter = require("./routes/reviewRoute");
 //import models
 const Store = require("./models/Store");
 const Product = require("./models/Product");
+const Chat = require("./models/Chat");
 
 const app = express();
 
@@ -186,6 +187,18 @@ app.get("/stores/:storeId/products/:productId", async (req, res) => {
     if (!product)
       return res.status(404).send("Product not found in this store");
     res.send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Endpoint: Lấy tất cả tin nhắn chat của một đơn hàng cụ thể
+app.get("/api/chat/:orderId", async (req, res) => {
+  const orderId = req.params.orderId;
+  try {
+    const chats = await Chat.find({ order_id: orderId }).sort({ sent_at: 1 });
+    res.send(chats);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
