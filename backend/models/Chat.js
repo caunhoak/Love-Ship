@@ -24,6 +24,14 @@ const chatSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  store_name: {
+    type: String,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
 });
 
 const Chat = mongoose.model("Chat", chatSchema);
