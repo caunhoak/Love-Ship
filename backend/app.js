@@ -5,6 +5,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const dbConfig = require("./config/dbConfig");
 const GoogleUser = require("./models/GoogleUser");
 const session = require("express-session");
+const initSocketServer = require("./sockets/socketServer");
 
 // Import các route và controllers
 const authRoutes = require("./routes/authRoutes");
@@ -208,7 +209,9 @@ app.use((error, req, res, next) => {
 });
 
 // Khởi động server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const server = app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${server.address().port}`);
 });
+
+// Khởi tạo và cấu hình Socket.IO server
+initSocketServer(server);
