@@ -23,6 +23,7 @@ import CartScreen from "./screens/Cart/CartScreen";
 import UpdateOrderStatus from "./screens/Order/UpdateOrderStatus";
 import PaymentScreen from "./screens/Payment/PaymentScreen";
 import ChatScreen from "./screens/Chat/ChatScreen";
+import StoreComponentScreen from "./screens/StoreOwnerScreen/StoreComponent/StoreComponentScreen";
 
 const Stack = createStackNavigator();
 
@@ -30,46 +31,94 @@ const App = () => {
   return (
     <NavigationContainer>
       <CartProvider>
-        <Stack.Navigator
-          initialRouteName="Start"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
+        <Stack.Navigator initialRouteName="Start">
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPasswordScreen}
+            options={{ headerShown: false }}
           />
           <Stack.Screen name="AdminScreen" component={AdminScreen} />
-          <Stack.Screen name="CustomerScreen" component={CustomerScreen} />
+          <Stack.Screen
+            name="CustomerScreen"
+            component={CustomerScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="RegisterStoreScreen"
             component={RegisterStoreScreen}
           />
           <Stack.Screen name="StoreScreen" component={StoreScreen} />
-          <Stack.Screen name="StoreOwner" component={StoreOwner} />
+          <Stack.Screen
+            name="StoreOwner"
+            component={StoreOwner}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="ResetPassword" component={ResetPassword} />
           <Stack.Screen name="EditUser" component={EditUser} />
-          <Stack.Screen name="ProductList" component={ProductList} />
-          <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+          <Stack.Screen
+            name="ProductList"
+            component={ProductList}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ProductDetail"
+            component={ProductDetailScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
           <Stack.Screen
             name="EditProductScreen"
             component={EditProductScreen}
+            options={{ headerTitleAlign: "center" }}
           />
-          <Stack.Screen name="AddProductScreen" component={AddProductScreen} />
+          <Stack.Screen
+            name="Thêm sản phẩm"
+            component={AddProductScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
           <Stack.Screen
             name="ProductManagementScreen"
             component={ProductManagementScreen}
           />
-          <Stack.Screen name="ManagementStore" component={ManagementStore} />
-          <Stack.Screen name="UpdateStore" component={UpdateStore} />
-          <Stack.Screen name="CartScreen" component={CartScreen} />
+          <Stack.Screen
+            name="ManagementStore"
+            component={ManagementStore}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="UpdateStore"
+            component={UpdateStore}
+            options={{ headerTitleAlign: "center" }}
+          />
+          <Stack.Screen
+            name="Giỏ Hàng"
+            component={CartScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
           <Stack.Screen
             name="UpdateOrderStatus"
             component={UpdateOrderStatus}
           />
           <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-          <Stack.Screen name="ChatScreen" component={ChatScreen} />
+          <Stack.Screen
+            name="ChatScreen"
+            component={ChatScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
+          <Stack.Screen
+            name="QUẢN LÝ ĐƠN HÀNG"
+            component={StoreComponentScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
         </Stack.Navigator>
       </CartProvider>
     </NavigationContainer>

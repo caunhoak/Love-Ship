@@ -83,7 +83,7 @@ const ProductManagementScreen = () => {
   );
 
   const handleAddProduct = () => {
-    navigation.navigate("AddProductScreen");
+    navigation.navigate("Thêm sản phẩm");
   };
 
   return (

@@ -11,13 +11,13 @@ import {
 import io from "socket.io-client";
 import axios from "axios";
 
-const SERVER_URL = "http://192.168.1.39:3000"; // Đổi lại URL của server của bạn
+const SERVER_URL = process.env.EXPO_PUBLIC_LOCALHOST;
 
 const ChatScreen = () => {
   const { userId, storeId, orderId } = useContext(CartContext);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false); // Trạng thái đang nhập tin nhắn
+  const [isTyping, setIsTyping] = useState(false);
   const socket = io.connect(SERVER_URL);
 
   let typingTimeout = null;

@@ -97,7 +97,7 @@ const ProductListScreen = () => {
         total_price: item.price * productQuantities[item._id],
       }));
       await createCartItems(cartId, items);
-      navigate("CartScreen");
+      navigate("Giỏ Hàng");
     } catch (error) {
       console.error("Error handling cart order:", error);
     }
@@ -188,6 +188,12 @@ const ProductListScreen = () => {
                 </View>
               </View>
               <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => addToCart(item._id)}
+              >
+                <Text style={styles.detailButtonText}>Thêm</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.detailButton}
                 onPress={() => handleDetailProducts(item._id)}
               >
@@ -271,6 +277,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
+  },
+  addButton: {
+    backgroundColor: "blue",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginRight: 10,
   },
   detailButton: {
     backgroundColor: "green",
