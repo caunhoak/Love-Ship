@@ -58,8 +58,7 @@ const OrderManagementScreen = () => {
   };
   const handleOrderPress = (orderId) => {
     setOrderId(orderId);
-    // navigate("UpdateOrderStatus");
-    navigate("ChatScreen");
+    navigate("QUẢN LÝ ĐƠN HÀNG");
   };
 
   const renderOrderItem = ({ item }) => (

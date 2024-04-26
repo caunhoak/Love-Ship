@@ -14,8 +14,8 @@ import { useNavigation } from "@react-navigation/native";
 const CartScreen = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceForAllItems, setTotalPriceForAllItems] = useState(0); // Initialize total price for all items
-  const { cartId, userId } = useContext(CartContext);
-  const { goBack } = useNavigation();
+  const { cartId, userId, setOrderId } = useContext(CartContext);
+  const { goBack, navigate } = useNavigation();
 
   useEffect(() => {
     fetchCartItems(cartId);
@@ -41,6 +41,28 @@ const CartScreen = () => {
     }
   };
 
+  const handlePayPal = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_LOCALHOST}/api/order/create`,
+        {
+          cartId: cartId,
+          userId: userId,
+        }
+      );
+
+      const orderId = response.data.order._id;
+      setOrderId(orderId);
+      console.log("Order ID:", orderId);
+
+      navigate("PaymentScreen");
+
+      // Reset cart or navigate to order details page
+    } catch (error) {
+      // Handle error
+    }
+  };
+
   const handleOrder = async () => {
     try {
       await axios.post(
@@ -61,7 +83,6 @@ const CartScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Giỏ hàng</Text>
       <FlatList
         data={cartItems}
         keyExtractor={(item) => item._id}
@@ -76,8 +97,11 @@ const CartScreen = () => {
       {totalPriceForAllItems !== 0 && (
         <Text style={styles.totalPrice}>Tổng giá: {totalPriceForAllItems}</Text>
       )}
+      <TouchableOpacity style={styles.paypal} onPress={handlePayPal}>
+        <Text style={styles.buttonText}>Thanh toán bằng PayPal</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleOrder}>
-        <Text style={styles.buttonText}>Đặt hàng</Text>
+        <Text style={styles.buttonText}>Thanh toán khi nhận hàng</Text>
       </TouchableOpacity>
     </View>
   );
@@ -101,6 +125,13 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
+  paypal: {
+    backgroundColor: "#00FFFF",
+    padding: 16,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 16,
+  },
   button: {
     backgroundColor: "#0069d9",
     padding: 16,
@@ -117,6 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 16,
+    textAlign: "center",
   },
 });
 

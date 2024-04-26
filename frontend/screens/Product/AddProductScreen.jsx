@@ -83,7 +83,6 @@ const AddProductScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add Product</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Product Name</Text>
         <TextInput

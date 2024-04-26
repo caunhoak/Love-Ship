@@ -61,8 +61,6 @@ const OrderCustomerScreen = () => {
 
   const handleOrderPress = (orderId) => {
     setOrderId(orderId);
-    // navigate("PaymentScreen");
-
     setStoreId(orders.find((order) => order._id === orderId).store_id);
     navigate("ChatScreen");
   };

@@ -27,7 +27,7 @@ const app = express();
 // Sử dụng express-session
 app.use(
   session({
-    secret: "your_secret_key", // Thay đổi "your_secret_key" bằng một chuỗi bất kỳ
+    secret: "secret_key", // Thay đổi "secret_key" bằng một chuỗi bất kỳ
     resave: false,
     saveUninitialized: true,
   })

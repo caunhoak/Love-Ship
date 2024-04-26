@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 import ShoppingHome from "./ShoppingHome";
 import OrderCustomerScreen from "../Order/OrderCustomerScreen";
-import ChatScreen from "../Chat/ChatScreen";
 import AccountScreen from "../Account/AccountScreen";
 
 const Tab = createBottomTabNavigator();
@@ -39,7 +38,6 @@ const Customer = () => {
       <Tab.Screen
         name="Shopping Home"
         component={ShoppingHome}
-        // options={{ headerShown: false }} // Ẩn thanh header cho màn hình Home
         options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
@@ -47,15 +45,10 @@ const Customer = () => {
         component={OrderCustomerScreen}
         options={{ headerTitleAlign: "center" }}
       />
-      {/* <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ headerShown: false }} // Ẩn thanh header cho màn hình Chat
-      /> */}
       <Tab.Screen
         name="Account"
         component={AccountScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitleAlign: "center" }}
       />
     </Tab.Navigator>
   );

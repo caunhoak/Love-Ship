@@ -5,15 +5,11 @@ import { Ionicons } from "@expo/vector-icons";
 import ProductManagementScreen from "./ProductManagementScreen";
 import OrderManagementScreen from "./OrderManagementScreen";
 import StatisticsScreen from "./StatisticsScreen";
-import ChatScreen from "./ChatScreen";
-// import AccountManagementScreen from "./AccountManagementScreen";
 import AccountScreen from "../Account/AccountScreen";
 
 const Tab = createBottomTabNavigator();
 
 const StoreOwner = () => {
-  // const { storeId } = route.params;
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,7 +41,6 @@ const StoreOwner = () => {
       <Tab.Screen
         name="Sản phẩm"
         component={ProductManagementScreen}
-        // initialParams={{ storeId }}
         options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
@@ -56,11 +51,6 @@ const StoreOwner = () => {
       <Tab.Screen
         name="Thống kê"
         component={StatisticsScreen}
-        options={{ headerTitleAlign: "center" }}
-      />
-      <Tab.Screen
-        name="Trò chuyện"
-        component={ChatScreen}
         options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
