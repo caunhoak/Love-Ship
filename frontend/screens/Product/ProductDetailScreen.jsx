@@ -42,7 +42,14 @@ const ProductDetailScreen = ({ route }) => {
       />
       <Text style={styles.productName}>{product.name}</Text>
       <Text style={styles.productPrice}>Price: {product.price}</Text>
-      <Text style={styles.productDescription}>{product.description}</Text>
+      <Text style={styles.productDescription}>
+        {" "}
+        Mô tả: {product.description}
+      </Text>
+      <Text style={styles.productCompletionTime}>
+        {" "}
+        Thời gian hoàn thành: {product.completion_time}
+      </Text>
     </View>
   );
 };
@@ -72,6 +79,14 @@ const styles = StyleSheet.create({
   productDescription: {
     fontSize: 16,
     textAlign: "center",
+    marginBottom: 10,
+  },
+  productCompletionTime: {
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "green",
+    marginBottom: 10,
   },
 });
 
