@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { CartContext } from "../../api/CartContext";
 import {
   View,
@@ -12,7 +12,6 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterStoreScreen = () => {
   const urlLocalHost = process.env.EXPO_PUBLIC_LOCALHOST;
@@ -21,7 +20,7 @@ const RegisterStoreScreen = () => {
   const [phone, setPhone] = useState("");
   const [logo, setLogo] = useState(null);
   const navigation = useNavigation();
-  const { userId } = useContext(CartContext);
+  const { userId, setStoreId } = useContext(CartContext);
 
   const handleRegister = async () => {
     try {
@@ -55,9 +54,7 @@ const RegisterStoreScreen = () => {
       const storeId = storeResponse.data._id;
       console.log("StoreId created:", storeId);
       if (storeId) {
-        // Lưu userId vào AsyncStorage
-        await AsyncStorage.setItem("storeId", storeId);
-
+        setStoreId(storeId);
         navigation.navigate("StoreOwner");
       } else {
         console.error("No storeId returned from server");
