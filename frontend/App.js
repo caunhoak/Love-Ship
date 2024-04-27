@@ -47,7 +47,11 @@ const App = () => {
             component={ForgotPasswordScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="AdminScreen" component={AdminScreen} />
+          <Stack.Screen
+            name="AdminScreen"
+            component={AdminScreen}
+            options={{ headerTitleAlign: "center" }}
+          />
           <Stack.Screen
             name="CustomerScreen"
             component={CustomerScreen}
@@ -56,6 +60,7 @@ const App = () => {
           <Stack.Screen
             name="RegisterStoreScreen"
             component={RegisterStoreScreen}
+            options={{ headerTitleAlign: "center" }}
           />
           <Stack.Screen name="StoreScreen" component={StoreScreen} />
           <Stack.Screen

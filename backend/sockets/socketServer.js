@@ -5,8 +5,11 @@ const User = require("../models/User");
 
 const saveChat = async (userId, storeId, orderId, message) => {
   try {
+    // Lấy tên cửa hàng từ storeId
     const store = await Store.findById(storeId);
     const storeName = store ? store.name : "";
+
+    // Lấy tên người dùng từ userId
     const user = await User.findById(userId);
     const username = user ? user.username : "";
 
@@ -16,7 +19,7 @@ const saveChat = async (userId, storeId, orderId, message) => {
       order_id: orderId,
       message,
       store_name: storeName,
-      username,
+      username: username,
     });
 
     const savedChat = await newChat.save();
@@ -33,20 +36,14 @@ const initSocketServer = (httpServer) => {
     console.log("A user connected");
 
     socket.on("sendMessage", async (data) => {
-      const { userId, storeId, orderId, message } = data;
-      if (message.trim() !== "") {
-        try {
-          const savedChat = await saveChat(userId, storeId, orderId, message);
-          io.emit("newMessage", savedChat);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    });
+      try {
+        const { userId, storeId, orderId, message } = data;
+        const savedChat = await saveChat(userId, storeId, orderId, message);
 
-    socket.on("typing", (data) => {
-      const { userId } = data;
-      socket.broadcast.emit("userTyping", { userId });
+        io.emit("newMessage", savedChat);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     socket.on("disconnect", () => {
