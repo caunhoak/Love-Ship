@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -25,6 +26,12 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchStores();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchStores();
+    }, [])
+  );
 
   const fetchStores = async () => {
     setLoading(true); // Set loading to true when fetching data
